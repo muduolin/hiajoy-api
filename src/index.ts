@@ -3,7 +3,7 @@ import pg from 'pg';
 import * as dotenv from 'dotenv';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 dotenv.config();
 const connectionString =
   'postgresql://mlin74:Welcome4@calmo.postgres.database.azure.com:5432/prod?sslmode=require';
