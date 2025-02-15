@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model task {
+  id          String   @id
+  description String
+  time        String   @default("1")
+  isDone      Boolean  @default(false)
+  userId      Int
+  createdAt   DateTime @default(now())
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model meditation {
+  id            Int      @id @default(autoincrement())
+  title         String
+  author        String
+  pubDate       DateTime @default(now())
+  image_url     String
+  audio_url     String
+  audio_type    String
+  audio_length  Int
+  tags          String[]  
+  subtitle      String
+  description   String
+  play_count        Int
+  favorite_count    Int
+}
+
+model user {
+  id                  Int                  @id @default(autoincrement())
+  email               String?              @unique
+  password            String?
+  avatar              String?
+  provider            String?
+  activation          String?              @default(uuid())
+  username            String?              @unique
+  createdAt           DateTime             @default(now())
+  expiredAt           DateTime?             
+  lastActiveAt        DateTime             @default(now())
+  isAdmin             Boolean              @default(false)
+  stripeCustomerId            String?      @unique
+  stripeSubscriptionId        String?
+  stripeProductId             String?
+  stripeSubscriptionRenewal   DateTime?
+  sendEmail           Boolean              @default(false)
+  datePaid            DateTime?
+  task                task[]
+  journal             journal[]
+}
+
+model code {
+  id                  Int                  @id @default(autoincrement())
+  email               String?              @unique
+  code                String?              
+  createdAt           DateTime             @default(now())
+}
+
+model journal {
+  id          Int   @id  @default(autoincrement())
+  title       String
+  description String?
+  content     String?
+  image       String?
+  time        String   @default("1")
+  isShared    Boolean  @default(false)
+  userId      Int
+  mood        Int?
+  createdAt   DateTime @default(now())
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

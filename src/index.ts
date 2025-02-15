@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import pg from "pg";
 import * as dotenv from "dotenv";
+const cors = require('cors');
 
 const middleware = require("./middleware");
 const journalRouter = require("./journal");
@@ -18,7 +19,7 @@ const pool = new pg.Pool({
 });
 // set the pool for global use
 app.locals.pool = pool;
-
+app.use(cors());
 app.use(express.json());
 
 app.use(middleware);
