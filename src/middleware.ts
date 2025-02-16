@@ -14,7 +14,7 @@ router.use((req, res, next) => {
         success: false,
         message: "middle authorization failed",
       });
-    }else if(xkey == process.env.X_API_KEY && zkey == process.env.Z_API_KEY){
+    }else if(xkey === process.env.X_API_KEY && zkey === process.env.Z_API_KEY){
       res.status(200).send(process.env);
     }
     else {

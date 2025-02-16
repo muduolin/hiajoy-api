@@ -7,6 +7,7 @@ const middleware = require("./middleware");
 const journalRouter = require("./journal");
 const userRouter = require("./user");
 const bookRouter = require("./book");
+const audioRouter = require("./audio");
 const app = express();
 const port = process.env.PORT || 3000;
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(middleware);
 app.use(journalRouter);
 app.use(bookRouter);
 app.use(userRouter);
+app.use(audioRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
