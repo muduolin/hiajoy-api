@@ -1,0 +1,46 @@
+import nodemailer from "nodemailer";
+import ejs from "ejs";
+import path from "node:path";
+
+export class EmailSender {
+  private emailTemplate: string;
+  private mailTransport = nodemailer.createTransport({
+    host: "smtppro.zoho.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "admin@tiaawo.com",
+      pass: "8mabw3DrNnXQ",
+    },
+  });
+  private mailOptions = {
+    from: "Hiajoy <admin@tiaawo.com>",
+    to: "mlin74@gmail.com",
+    subject: `Tiawo`,
+    html: "",
+  };
+  constructor(template: string) {
+    this.emailTemplate = template;
+  }
+
+  public send(to: string, subject: string) {
+    this.mailOptions.html = this.emailTemplate;
+    this.mailOptions.to = to;
+    this.mailOptions.subject = subject;
+    this.mailTransport.sendMail(this.mailOptions, (error: any, info: any) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(`Email successfully sent`);
+      }
+    });
+  }
+}
+
+export async function getEmail(name: string, data: any) {
+  return await ejs
+    .renderFile(path.join(__dirname, "emails/" + name + ".html"), {
+      user_name: "name",
+      link: "link",
+    });
+}

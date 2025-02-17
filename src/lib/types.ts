@@ -7,7 +7,8 @@ export interface Book {
 export interface Journal {
   id: number;
   title: string;
-  autcontenthor: string;
+  content: string;
+  mood: number|undefined;
 }
 
 export type User = {

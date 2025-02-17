@@ -41,7 +41,6 @@ model user {
   password            String?
   avatar              String?
   provider            String?
-  activation          String?              @default(uuid())
   username            String?              @unique
   createdAt           DateTime             @default(now())
   expiredAt           DateTime?             
@@ -51,16 +50,18 @@ model user {
   stripeSubscriptionId        String?
   stripeProductId             String?
   stripeSubscriptionRenewal   DateTime?
-  sendEmail           Boolean              @default(false)
   datePaid            DateTime?
   task                task[]
   journal             journal[]
 }
 
-model code {
+model email{
   id                  Int                  @id @default(autoincrement())
   email               String?              @unique
-  code                String?              
+  code                String?
+  codeExpiredAt       DateTime?
+  sendEmail           Boolean              @default(false)
+  sendEmailAt         DateTime?
   createdAt           DateTime             @default(now())
 }
 

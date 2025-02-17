@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
-  const host = "https://tiaawo.blob.core.windows.net/";
+  const host = "https://tiaawo.blob.core.windows.net";
 
   await prisma.meditation.upsert({
     where: { id: 1 },
-    update: {      title: "Calming night",
-        author: "",
-        image_url: host + "/images/nature/012.jpg",
-        audio_url: host + "/audios/sleep01.mp3",
-        audio_type: "mp3",
-        audio_length: 0,
-        tags: ["Sleep", "10 minutes"],
-        subtitle: "Guided sleep meditation",
-        description: "",
-        play_count: 0,
-        favorite_count: 0,
-        set: null,},
+    update: {},
     create: {
       title: "Calming night",
       author: "",
@@ -24,7 +13,7 @@ async function main() {
       audio_url: host + "/audios/sleep01.mp3",
       audio_type: "mp3",
       audio_length: 0,
-      tags: ["Sleep", "10 minutes"],
+      tags: ["sleep", "10 minutes", "meditation"],
       subtitle: "Guided sleep meditation",
       description: "",
       play_count: 0,

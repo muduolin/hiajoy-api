@@ -4,7 +4,6 @@ import { Md5 } from "ts-md5";
 import { jwtDecode } from "jwt-decode";
 import * as db from "./db";
 import { encrypt, decrypt } from "./lib/security";
-import { User } from "./lib/types";
 
 const router = express.Router();
 
