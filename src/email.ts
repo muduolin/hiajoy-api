@@ -19,7 +19,7 @@ router.post("/requestcode", async (req: Request, res: Response) => {
     if (updated) {
       let sender = new EmailSender(await getEmail("sendcode", {code: entity.code}))
 
-      sender.send(email, "Tiaawo: Reset your account password");
+      sender.send(email, "Hiajoy: one time passcode");
       res.status(200).json({ success: true, message: "code sent to the email"});
     }
   } else res.status(200).json({ success: false});

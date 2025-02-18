@@ -1,5 +1,6 @@
 import express from "express";
 import pg from "pg";
+import path from "node:path";
 import * as dotenv from "dotenv";
 const cors = require('cors');
 import { PrismaClient } from "@prisma/client";
@@ -26,6 +27,7 @@ app.locals.pool = pool;
 const client = new PrismaClient();
 app.locals.prisma = client;
 
+app.use(express.static(path.join(__dirname, 'emails')));
 app.use(cors());
 app.use(express.json());
 
