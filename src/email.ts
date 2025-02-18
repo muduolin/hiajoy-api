@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/requestcode", async (req: Request, res: Response) => {
   const email = req.body["email"];
 
+  console.log('email')
   const entity = await db.createEmail(req, email);
   
   if (entity.id) {
@@ -16,7 +17,7 @@ router.post("/requestcode", async (req: Request, res: Response) => {
     var updated = await db.updateEmail(req, entity);
     
     if (updated) {
-      let sender = new EmailSender(await getEmail("sendcode", {}))
+      let sender = new EmailSender(await getEmail("sendcode", {code: entity.code}))
 
       sender.send(email, "Tiaawo: Reset your account password");
       res.status(200).json({ success: true, message: "code sent to the email"});

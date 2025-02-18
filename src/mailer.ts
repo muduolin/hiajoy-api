@@ -39,8 +39,5 @@ export class EmailSender {
 
 export async function getEmail(name: string, data: any) {
   return await ejs
-    .renderFile(path.join(__dirname, "emails/" + name + ".html"), {
-      user_name: "name",
-      link: "link",
-    });
+    .renderFile<string>(path.join(__dirname, "emails/" + name + ".html"), data);
 }

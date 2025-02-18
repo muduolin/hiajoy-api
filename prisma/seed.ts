@@ -1,3 +1,5 @@
+//npx prisma db seed  
+//npx prisma migrate dev
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
@@ -261,6 +263,44 @@ async function main() {
       set: null,
     },
   });
+
+  await prisma.meditation.upsert({
+    where: { id: 14 },
+    update: {},
+    create: {
+      title: "5 min breathing",
+      author: "",
+      image_url: host + "/images/nature/013.jpg",
+      audio_url: host + "/audios/2minute01.mp3",
+      audio_type: "mp3",
+      audio_length: 0,
+      tags: ["short", "5 minutes", "meditation"],
+      subtitle: "Guided breathing meditation",
+      description: "",
+      play_count: 0,
+      favorite_count: 0,
+      set: null,
+    },
+  });
+  await prisma.meditation.upsert({
+    where: { id: 15 },
+    update: {},
+    create: {
+      title: "5 min breathing",
+      author: "",
+      image_url: host + "/images/nature/014.jpg",
+      audio_url: host + "/audios/2minute02.mp3",
+      audio_type: "mp3",
+      audio_length: 0,
+      tags: ["short", "5 minutes", "meditation"],
+      subtitle: "Guided breathing meditation",
+      description: "",
+      play_count: 0,
+      favorite_count: 0,
+      set: null,
+    },
+  });
+
 }
 
 main()
