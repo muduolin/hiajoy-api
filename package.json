@@ -11,6 +11,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
     "@types/pg": "^8.11.11",
+    "copyfiles": "^2.4.1",
     "express": "^4.21.2",
     "prisma": "^6.3.1",
     "ts-node": "^10.9.2",
@@ -18,7 +19,9 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build": "npm run build:app && npm run build:static",
+    "build:app": "tsc",
+    "build:static": "copyfiles -u 1 src/emails/* dist/",
     "dev": "npx nodemon src/index.ts"
   },
   "dependencies": {

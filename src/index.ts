@@ -27,7 +27,6 @@ app.locals.pool = pool;
 const client = new PrismaClient();
 app.locals.prisma = client;
 
-app.use(express.static(path.join(__dirname, 'emails')));
 app.use(cors());
 app.use(express.json());
 
