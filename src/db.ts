@@ -205,6 +205,7 @@ export async function updateEmail(
         code: email.code,
         sendEmail: email.sendEmail,
         sendEmailAt: email.sendEmailAt,
+        codeExpiredAt: email.codeExpiredAt
       }
     })
     return updated;

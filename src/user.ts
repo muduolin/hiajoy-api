@@ -119,23 +119,74 @@ router.post("/login", async (req: Request, res: Response) => {
 router.post("/register", async (req: Request, res: Response) => {
   const email = req.body["email"];
   const password = req.body["password"];
+  const code = req.body["code"];
 
-  if (email && isValidEmail(email) && password) {
-    var rowCount = await db.createUser(req, email, Md5.hashStr(password));
-    var user = await db.getUserByEmail(req, email);
-    if (rowCount && user) {
-      res.status(200).json({
-        success: true,
-        message: "user registered",
-        data: { key: encrypt(user.id.toString()) },
-      });
+  var emails = await db.searchEmail(req, email);
+  if (
+    emails &&
+    emails[0] &&
+    emails[0].code == code &&
+    emails[0].codeExpiredAt > new Date()
+  ) {
+    if (email && isValidEmail(email) && password) {
+      var rowCount = await db.createUser(req, email, Md5.hashStr(password));
+      var user = await db.getUserByEmail(req, email);
+      if (rowCount && user) {
+        res.status(200).json({
+          success: true,
+          message: "user registered",
+          data: { key: encrypt(user.id.toString()) },
+        });
+      } else {
+        res.status(200).json({ success: false, message: "email existed." });
+      }
     } else {
-      res.status(200).json({ success: false, message: "email existed." });
+      res
+        .status(200)
+        .json({ success: false, message: "email or password not valid." });
     }
-  } else {
+  }else {
     res
       .status(200)
-      .json({ success: false, message: "email or password not valid." });
+      .json({ success: false, message: "email or code not valid." });
+  }
+});
+
+router.post("/reset", async (req: Request, res: Response) => {
+  const email = req.body["email"];
+  const password = req.body["password"];
+  const code = req.body["code"];
+
+  var emails = await db.searchEmail(req, email);
+  if (
+    emails &&
+    emails[0] &&
+    emails[0].code == code &&
+    emails[0].codeExpiredAt > new Date()
+  ) {
+    if (email && isValidEmail(email) && password) {
+      var user = await db.getUserByEmail(req, email);
+      if (email && password && user) {
+
+        user.password = Md5.hashStr(password);
+        var result = await db.updateUser(req, user);
+        res.status(200).json({
+          success: true,
+          message: "user password updated",
+          data: { key: encrypt(user.id.toString()) },
+        });
+      } else {
+        res.status(200).json({ success: false, message: "email not existed." });
+      }
+    } else {
+      res
+        .status(200)
+        .json({ success: false, message: "email or password not valid." });
+    }
+  }else {
+    res
+      .status(200)
+      .json({ success: false, message: "email or code not valid." });
   }
 });
 
@@ -175,9 +226,12 @@ router.delete("/user", async (req: Request, res: Response) => {
     const id = +decrypt(key);
     if (id) {
       const result = await db.deleteUser(req, id);
-      
-      result?res.status(200).json({ success: true, message: "deleted" }):
-      res.status(200).json({ success: false, message: "no record deleted" });
+
+      result
+        ? res.status(200).json({ success: true, message: "deleted" })
+        : res
+            .status(200)
+            .json({ success: false, message: "no record deleted" });
     } else {
       res
         .status(200)

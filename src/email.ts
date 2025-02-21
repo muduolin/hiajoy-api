@@ -7,13 +7,16 @@ const router = express.Router();
 router.post("/requestcode", async (req: Request, res: Response) => {
   const email = req.body["email"];
 
-  console.log('email')
-  const entity = await db.createEmail(req, email);
   
-  if (entity.id) {
+  const entity = await db.createEmail(req, email);
+  console.log(entity)
+  console.log(entity.expiredAt < new Date())
+  if (entity.id && entity.codeExpiredAt < new Date()) {
     var code = Math.floor(100000 + Math.random() * 900000);
     entity.code = code.toString();
     entity.codeExpiredAt = new Date((new Date().getTime()) + 10 * 60 * 1000);
+    entity.sendEmailAt = new Date();
+    entity.sendEmail = true;
     var updated = await db.updateEmail(req, entity);
     
     if (updated) {
