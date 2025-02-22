@@ -10,7 +10,7 @@ router.post("/requestcode", async (req: Request, res: Response) => {
   
   const entity = await db.createEmail(req, email);
   console.log(entity)
-  console.log(entity.expiredAt < new Date())
+  
   if (entity.id && entity.codeExpiredAt < new Date()) {
     var code = Math.floor(100000 + Math.random() * 900000);
     entity.code = code.toString();
