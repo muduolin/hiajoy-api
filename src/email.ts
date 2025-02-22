@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/requestcode", async (req: Request, res: Response) => {
   const email = req.body["email"];
 
-  
+  console.log("upsert email record: " + email);
   const entity = await db.createEmail(req, email);
   console.log(entity)
   
