@@ -180,6 +180,7 @@ export async function createEmail(
   if(!isValidEmail(email))
     return null;
   try {
+    console.log("prisma upsert email: " + email)
     const entity = await req.app.locals.prisma.email.upsert({
       where: {email: email},
       create: {email: email},
