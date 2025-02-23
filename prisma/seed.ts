@@ -1,11 +1,11 @@
 //npx prisma db seed  
 //npx prisma migrate dev
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, track_type } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
   const host = "https://hiajoy.blob.core.windows.net";
 
-  await prisma.$queryRaw`truncate track restart identity;`
+  await prisma.$queryRaw`truncate track restart identity cascade;`
 
   await prisma.track.upsert({
     where: { id: 1 },
@@ -23,6 +23,7 @@ async function main() {
       play_count: 0,
       favorite_count: 0,
       set: null,
+      type: track_type.MEDITATION
     },
   });
 

@@ -39,7 +39,7 @@ model track {
   play_count        Int
   favorite_count    Int
   set           String?
-  type          track_type
+  type          track_type?
   favorite_users      user_track[]
 }
 
@@ -65,9 +65,9 @@ model user {
 }
 
 model user_track{
-  user        user     @relation(fields: [userId], references: [id])
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  track       track     @relation(fields: [trackId], references: [id])
+  track       track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
   trackId     Int
   @@id([userId, trackId])
 }
