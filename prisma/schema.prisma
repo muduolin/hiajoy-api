@@ -18,7 +18,13 @@ model task {
   user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model meditation {
+enum track_type {
+  MEDITATION
+  COURSE
+  AFFIRMATION
+}
+
+model track {
   id            Int      @id @default(autoincrement())
   title         String
   author        String
@@ -33,6 +39,8 @@ model meditation {
   play_count        Int
   favorite_count    Int
   set           String?
+  type          track_type
+  favorite_users      user_track[]
 }
 
 model user {
@@ -53,6 +61,15 @@ model user {
   datePaid            DateTime?
   task                task[]
   journal             journal[]
+  favorite_tracks      user_track[]
+}
+
+model user_track{
+  user        user     @relation(fields: [userId], references: [id])
+  userId      Int
+  track       track     @relation(fields: [trackId], references: [id])
+  trackId     Int
+  @@id([userId, trackId])
 }
 
 model email{

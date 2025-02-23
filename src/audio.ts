@@ -11,7 +11,7 @@ router.get("/audio", async (req: Request, res: Response) => {
   var audios;
 
   if (tags) {
-    audios = await prisma.meditation.findMany({
+    audios = await prisma.track.findMany({
       where: {
         tags: {
           hasEvery: tags.toString().split(","),
@@ -19,7 +19,7 @@ router.get("/audio", async (req: Request, res: Response) => {
       },
     });
   } else {
-    audios = await prisma.meditation.findMany();
+    audios = await prisma.track.findMany();
   }
 
   res.status(200).json({ success: true, data: audios });
