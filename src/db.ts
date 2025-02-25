@@ -230,3 +230,19 @@ export async function deleteEmail(
   }
 }
 
+export async function getFavoriteTracks(
+  req: Request,
+  id: number
+) {
+  try {
+    const entity = await req.app.locals.prisma.user.findFirst({
+      where:{        
+        id: id},
+        include: { favorite_tracks: { include: { track: true } } }
+    })
+    return entity.favorite_tracks;
+  } catch {
+    return null;
+  }
+}
+

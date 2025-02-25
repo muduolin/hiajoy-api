@@ -25,9 +25,9 @@ enum track_type {
 }
 
 model track {
-  id            Int      @id @default(autoincrement())
-  title         String
-  author        String
+  id            Int      @id
+  title         String?
+  author        String?
   pubDate       DateTime @default(now())
   image_url     String
   audio_url     String
@@ -35,9 +35,9 @@ model track {
   audio_length  Int
   tags          String[]  
   subtitle      String
-  description   String
-  play_count        Int
-  favorite_count    Int
+  description   String?
+  play_count        Int?
+  favorite_count    Int?
   set           String?
   type          track_type?
   favorite_users      user_track[]
