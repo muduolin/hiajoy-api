@@ -17,9 +17,24 @@ router.get("/audio", async (req: Request, res: Response) => {
           hasEvery: tags.toString().split(","),
         },
       },
+      orderBy: [
+        {
+          set: 'asc',
+        },
+        {
+          id: 'asc',
+        },
+      ],
     });
   } else {
-    audios = await prisma.track.findMany();
+    audios = await prisma.track.findMany({orderBy: [
+      {
+        set: 'asc',
+      },
+      {
+        id: 'asc',
+      },
+    ]});
   }
 
   res.status(200).json({ success: true, data: audios });

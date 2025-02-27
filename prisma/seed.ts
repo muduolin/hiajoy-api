@@ -48,7 +48,7 @@ async function main() {
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "1",
     type: track_type.COURSE
   };
 
@@ -65,7 +65,7 @@ async function main() {
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "2",
     type: track_type.COURSE
   };
 
@@ -75,14 +75,14 @@ async function main() {
     title: "PT 101: Acting on Values",
     author: "Hiajoy Inc.",
     image_url: host + "/images/main/034.jpg",
-    audio_url: host + "/audios/session02.mp3",
+    audio_url: host + "/audios/session03.mp3",
     audio_type: "mp3",
     audio_length: 0,
     tags: ["Courses", "Powertools"],
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "3",
     type: track_type.COURSE
   };
 
@@ -92,14 +92,14 @@ async function main() {
     title: "PT 101: Being kind",
     author: "Hiajoy Inc.",
     image_url: host + "/images/main/034.jpg",
-    audio_url: host + "/audios/session02.mp3",
+    audio_url: host + "/audios/session04.mp3",
     audio_type: "mp3",
     audio_length: 0,
     tags: ["Courses", "Powertools"],
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "4",
     type: track_type.COURSE
   };
   await upsert(5, record);
@@ -108,14 +108,14 @@ async function main() {
     title: "PT 101: Making Room",
     author: "Hiajoy Inc.",
     image_url: host + "/images/main/034.jpg",
-    audio_url: host + "/audios/session02.mp3",
+    audio_url: host + "/audios/session05.mp3",
     audio_type: "mp3",
     audio_length: 0,
     tags: ["Courses", "Powertools"],
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "5",
     type: track_type.COURSE
   };
   await upsert(6, record);
@@ -124,14 +124,14 @@ async function main() {
     title: "PT 101: Conclusion",
     author: "Hiajoy Inc.",
     image_url: host + "/images/main/034.jpg",
-    audio_url: host + "/audios/session02.mp3",
+    audio_url: host + "/audios/session06.mp3",
     audio_type: "mp3",
     audio_length: 0,
     tags: ["Courses", "Powertools"],
     subtitle: "A course for managing stress",
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
-    set: "Powertools",
+    set: "6",
     type: track_type.COURSE
   };
   await upsert(7, record);
