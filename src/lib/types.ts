@@ -21,4 +21,5 @@ export type User = {
   expiredAt: Date|undefined;
   createdAt: Date|undefined;
   lastActiveAt: Date|undefined;
+  points: number;
 }

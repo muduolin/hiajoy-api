@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { User, Journal } from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
-import { email } from "@prisma/client";
+import { email, user } from "@prisma/client";
 
 
 export async function getUserByEmail(req: Request, email: string) {
@@ -57,6 +57,7 @@ export async function updateUser(req: Request, user: User) {
   params += user.provider ? ` provider='${user.provider}', ` : "";
   params += user.username ? ` username='${user.username}', ` : "";
   params += user.expiredAt ? ` expiredAt='${user.expiredAt}', ` : "";
+  params += user.points ? ` points='${user.points}', ` : "";
 
   params = trimEndChar(params.trimEnd(), ",");
   const query = `Update "user" SET ${params} WHERE id = '${user.id}';`;

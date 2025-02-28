@@ -39,6 +39,7 @@ async function main() {
 
   record = {
     title: "PT 101: Grounding",
+    is_premium: false,
     author: "Hiajoy Inc.",
     image_url: host + "/images/main/034.jpg",
     audio_url: host + "/audios/session01.mp3",

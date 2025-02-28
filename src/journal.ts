@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { decrypt } from "./lib/security";
 import * as db from "./db";
 import { Journal } from "./lib/types";
-import { PrismaClient } from "@prisma/client";
+
 
 const router = express.Router();
 

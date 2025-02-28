@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { BlobServiceClient } from "@azure/storage-blob";
-
+import { decrypt } from "./lib/security";
+import * as db from "./db";
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -9,7 +10,17 @@ router.get("/audio", async (req: Request, res: Response) => {
   const page = req.query.page ?? 0;
   const pageSize = req.query.pageSize ?? 10;
   const tags = req.query.tags;
+  var isPremium: boolean | null | undefined = false;
+  const key_id = req.get("key");
 
+  if (key_id) {
+    const id = decrypt(key_id);
+
+    const usr = await db.getUserById(req, +id);
+    isPremium = (usr && usr.expiredAt && usr.expiredAt > new Date());
+  }
+  isPremium=isPremium??false
+console.log(isPremium)
   var audios;
 
   if (tags) {
@@ -27,6 +38,24 @@ router.get("/audio", async (req: Request, res: Response) => {
           id: "asc",
         },
       ],
+      select: {
+        id: true,
+        is_premium: true,
+        title: true,
+        author: true,
+        pubDate: true,
+        image_url: true,
+        audio_url: isPremium??false,
+        audio_type: true,
+        audio_length: true,
+        tags: true,
+        subtitle: true,
+        description: true,
+        play_count: true,
+        favorite_count: true,
+        set: true,
+        type: true,
+      }
     });
   } else {
     audios = await prisma.track.findMany({
@@ -38,7 +67,25 @@ router.get("/audio", async (req: Request, res: Response) => {
           id: "asc",
         },
       ],
-    });
+      select: {
+        id: true,
+        is_premium: true,
+        title: true,
+        author: true,
+        pubDate: true,
+        image_url: true,
+        audio_url: true,
+        audio_type: true,
+        audio_length: true,
+        tags: true,
+        subtitle: true,
+        description: true,
+        play_count: true,
+        favorite_count: true,
+        set: true,
+        type: true, 
+      }
+    }); 
   }
 
   res.status(200).json({ success: true, data: audios });
