@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 
 router.use((req, res, next) => {
-  if (req.originalUrl === "/ping") {
+  if (req.originalUrl === "/ping" || req.originalUrl.startsWith("/mp3")) {
     next();
   } else {
     console.log("middleware checking x-key");
