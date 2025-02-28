@@ -55,6 +55,7 @@ router.post("/login", async (req: Request, res: Response) => {
             isPremium: user.expiredAt && user.expiredAt > new Date(),
             createdAt: user.createdAt,
             lastActiveAt: user.lastActiveAt,
+            points: user.points,
             key: encrypt(user.id.toString()),
           },
         });
