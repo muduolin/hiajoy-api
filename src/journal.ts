@@ -14,7 +14,7 @@ router.get("/journal", async (req: Request, res: Response) => {
   if (key_id) {
     const id = decrypt(key_id);
     
-    const data = await db.getJournal(req, +id, +page, +pageSize)
+    const data = await db.getJournal(req, id, +page, +pageSize)
     res.status(200).json({success: true, data: data});
   }
   else
@@ -29,7 +29,7 @@ router.post("/journal", async (req: Request, res: Response) => {
   if (key_id)
   {
     const id = decrypt(key_id); 
-    var inserted = await db.createJournal(req, +id, title, content);
+    var inserted = await db.createJournal(req, id, title, content);
     if(inserted){
       res.status(200).json({success: true, data: inserted});
     }
@@ -48,10 +48,12 @@ router.put("/journal", async (req: Request, res: Response) => {
   if (key_id)
   {
     const uid = decrypt(key_id); 
-    var updated = await db.updateJournal(req, +uid, {id: +id, title: title, content: content} as Journal);
+    var updated = await db.updateJournal(req, uid, {id: +id, title: title, content: content} as Journal);
     console.log(updated)
     if(updated){
       res.status(200).json({success: true, data: updated});
+    }else{
+      res.status(200).json({success: false, message: "journal not updated"});
     }
     
   }else{
@@ -66,10 +68,12 @@ router.delete("/journal", async (req: Request, res: Response) => {
   if (key_id)
   {
     const uid = decrypt(key_id); 
-    var updated = await db.deleteJournal(req, +uid, id);
+    var updated = await db.deleteJournal(req, uid, id);
     console.log(updated)
     if(updated){
       res.status(200).json({success: true, data: updated});
+    }else{
+      res.status(200).json({success: false, message: "journal not found"});
     }
     
   }else{

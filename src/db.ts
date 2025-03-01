@@ -5,24 +5,29 @@ import { email, user } from "@prisma/client";
 
 
 export async function getUserByEmail(req: Request, email: string) {
-  const client = await req.app.locals.pool.connect();
+  const user = await req.app.locals.prisma.user.findFirst({
+    where:{
+      email: email
+    },
+    include:{
+      profile: true
+    }
+  })
 
-  const query = `SELECT * FROM "user" Where email=\'${email}\'`;
-
-  const result = await client.query(query);
-  client.release();
-
-  return result.rows ? (result.rows[0] as User) : null;
+  return user;
 }
 
-export async function getUserById(req: Request, id: number) {
-  const client = await req.app.locals.pool.connect();
+export async function getUserById(req: Request, id: string) {
+  const user = await req.app.locals.prisma.user.findFirst({
+    where:{
+      id: id
+    },
+    include:{
+      profile: true
+    }
+  })
 
-  const query = `SELECT * FROM "user" Where id=\'${id}\'`;
-  const result = await client.query(query);
-  client.release();
-
-  return result.rows ? (result.rows[0] as User) : null;
+  return user;
 }
 
 export async function createUser(
@@ -31,95 +36,91 @@ export async function createUser(
   password: string,
   provider: string = ""
 ) {
-  const client = await req.app.locals.pool.connect();
-
-  const query = `INSERT INTO "user"
-    (email, password, provider)
-      SELECT '${email}', '${password}', '${provider}'
-      WHERE
-      NOT EXISTS (
-        SELECT id FROM "user" WHERE email = '${email}'
-    );`;
-
-  const result = await client.query(query);
-  client.release();
-
-  return result.rowCount > 0;
+  const created = await req.app.locals.prisma.user.upsert({
+    where: { email: email },
+    update: {},
+    create: {
+      email: email,
+      password: password,
+      provider: provider,
+      profile: {
+        create: {},
+      },
+    },
+  });
+  return created;
 }
 
 export async function updateUser(req: Request, user: User) {
-  const client = await req.app.locals.pool.connect();
+  const updated = req.app.locals.prisma.user.update({
+    where: { id: user.id },
+    data: {
+      avatar: user.avatar,
+      password: user.password,
+      provider: user.provider,
+      username: user.username,
+      expiredAt: user.expiredAt,
+      profile: {
+        update: {
+          points: user.points,
+        },
+      },
+    },
+  });
 
-  // construct set
-  var params = "";
-  params += user.avatar ? ` avatar='${user.avatar}', ` : "";
-  params += user.password ? ` password='${user.password}', ` : "";
-  params += user.provider ? ` provider='${user.provider}', ` : "";
-  params += user.username ? ` username='${user.username}', ` : "";
-  params += user.expiredAt ? ` expiredAt='${user.expiredAt}', ` : "";
-  params += user.points ? ` points='${user.points}', ` : "";
-
-  params = trimEndChar(params.trimEnd(), ",");
-  const query = `Update "user" SET ${params} WHERE id = '${user.id}';`;
-
-  const result = await client.query(query);
-  console.log(query);
-  client.release();
-
-  return result.rowCount > 0;
+  return updated;
 }
 
-export async function deleteUser(req: Request, id: number) {
-  const client = await req.app.locals.pool.connect();
+export async function deleteUser(req: Request, id: string) {
+  try {
+    const deleted = await req.app.locals.prisma.user.delete({
+      where: { id: id },
+    });
 
-  const query = `DELETE FROM "user" Where id=${id}`;
-  console.log(query);
-  const result = await client.query(query);
-  client.release();
-
-  return result.rowCount > 0;
+    return deleted;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function getJournal(
   req: Request,
-  id: number,
+  id: string,
   page: number = 0,
   pageSize: number = 10
 ) {
   const offset = +pageSize * +page;
-  const client = await req.app.locals.pool.connect();
 
-  const query = `SELECT id, title, content, "createdAt" FROM "journal"  WHERE "userId"=${id} order by "createdAt" desc limit ${pageSize} offset ${offset}`;
-
-  const result = await client.query(query);
-  client.release();
-
-  return result.rows ? (result.rows as Journal[]) : null;
+  const records = await req.app.locals.prisma.journal.findMany({
+    where: {
+      userId: id
+    },
+    skip: offset,
+    take: pageSize
+  });
+  return records;
 }
 
 export async function createJournal(
   req: Request,
-  id: number,
+  userId: string,
   title: string,
   content: string
 ) {
-  const client = await req.app.locals.pool.connect();
+  const record = await req.app.locals.prisma.journal.create({
+    data:{
+      userId: userId,
+      title: title,
+      content: content
+    }
+  })
 
-  const query = `INSERT INTO "journal"
-    (title, content, "userId")
-      Values ('${title}', '${content}', '${id}')
-      RETURNING id, title, content, "createdAt"
-      ;`;
-
-  const result = await client.query(query);
-
-  client.release();
-  return result.rowCount > 0 ? (result.rows[0] as Journal) : null;
+  return record;
 }
 
 export async function updateJournal(
   req: Request,
-  id: number,
+  id: string,
   journal: Journal
 ) {
   try {
@@ -139,12 +140,7 @@ export async function updateJournal(
   }
 }
 
-export async function deleteJournal(
-  req: Request,
-  userId: number,
-  id: number
-
-) {
+export async function deleteJournal(req: Request, userId: string, id: number) {
   try {
     const entity = await req.app.locals.prisma.journal.delete({
       where: {
@@ -158,34 +154,27 @@ export async function deleteJournal(
   }
 }
 
-export async function searchEmail(
-  req: Request,
-  email: string
-) {
+export async function searchEmail(req: Request, email: string) {
   try {
     const emails = await req.app.locals.prisma.email.findMany({
       where: {
-        email: email
-      }
-    })
+        email: email,
+      },
+    });
     return emails;
   } catch {
     return false;
   }
 }
 
-export async function createEmail(
-  req: Request,
-  email: string
-) {
-  if(!isValidEmail(email))
-    return null;
+export async function createEmail(req: Request, email: string) {
+  if (!isValidEmail(email)) return null;
   try {
-    console.log("prisma upsert email: " + email)
+    console.log("prisma upsert email: " + email);
     const entity = await req.app.locals.prisma.email.upsert({
-      where: {email: email},
-      create: {email: email},
-      update: {email: email}
+      where: { email: email },
+      create: { email: email },
+      update: { email: email },
     });
     return entity;
   } catch (e) {
@@ -193,57 +182,52 @@ export async function createEmail(
   }
 }
 
-export async function updateEmail(
-  req: Request,
-  email: email
-) {
+export async function updateEmail(req: Request, email: email) {
   try {
-    
-    if(!isValidEmail(email.email!)) return null;
-    
+    if (!isValidEmail(email.email!)) return null;
+
     const updated = await req.app.locals.prisma.email.update({
-      where:{email: email.email},
-      data:{
+      where: { email: email.email },
+      data: {
         code: email.code,
         sendEmail: email.sendEmail,
         sendEmailAt: email.sendEmailAt,
-        codeExpiredAt: email.codeExpiredAt
-      }
-    })
+        codeExpiredAt: email.codeExpiredAt,
+      },
+    });
     return updated;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return null;
   }
 }
 
-export async function deleteEmail(
-  req: Request,
-  email: string
-) {
+export async function deleteEmail(req: Request, email: string) {
   try {
     const entity = await req.app.locals.prisma.email.delete({
-      where:{ email : email}
-    })
+      where: { email: email },
+    });
+
     return entity;
   } catch {
     return null;
   }
 }
 
-export async function getFavoriteTracks(
-  req: Request,
-  id: number
-) {
+export async function getFavoriteTracks(req: Request, id: string) {
   try {
     const entity = await req.app.locals.prisma.user.findFirst({
-      where:{        
-        id: id},
-        include: { favorite_tracks: { include: { track: true } } }
-    })
+      where: {
+        id: id,
+      },
+      include: {
+        profile: {
+          favorite_tracks: { include: { track: true } },
+        },
+      },
+    });
     return entity.favorite_tracks;
   } catch {
     return null;
   }
 }
-

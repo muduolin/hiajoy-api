@@ -55,7 +55,7 @@ router.post("/login", async (req: Request, res: Response) => {
             isPremium: user.expiredAt && user.expiredAt > new Date(),
             createdAt: user.createdAt,
             lastActiveAt: user.lastActiveAt,
-            points: user.points,
+            points: user.profile.points,
             key: encrypt(user.id.toString()),
           },
         });
@@ -74,6 +74,7 @@ router.post("/login", async (req: Request, res: Response) => {
           isPremium: user.expiredAt && user.expiredAt > new Date(),
           createdAt: user.createdAt,
           lastActiveAt: user.lastActiveAt,
+          points: user.profile.points,
           key: encrypt(user.id.toString()),
         },
       });
@@ -97,6 +98,7 @@ router.post("/login", async (req: Request, res: Response) => {
             isPremium: false,
             createdAt: userResult.createdAt,
             lastActiveAt: userResult.lastActiveAt,
+            points: user.profile.points,
             key: encrypt(userResult.id.toString()),
           },
         });
@@ -123,6 +125,7 @@ router.post("/register", async (req: Request, res: Response) => {
   const code = req.body["code"];
 
   var emails = await db.searchEmail(req, email);
+  
   if (
     emails &&
     emails[0] &&
@@ -130,13 +133,17 @@ router.post("/register", async (req: Request, res: Response) => {
     emails[0].codeExpiredAt > new Date()
   ) {
     if (email && isValidEmail(email) && password) {
-      var rowCount = await db.createUser(req, email, Md5.hashStr(password));
       var user = await db.getUserByEmail(req, email);
-      if (rowCount && user) {
+      if(user){
+        res.status(200).json({ success: false, message: "email existed." });
+        return;
+      }
+      var newUser = await db.createUser(req, email, Md5.hashStr(password));
+      if (newUser) {
         res.status(200).json({
           success: true,
           message: "user registered",
-          data: { key: encrypt(user.id.toString()) },
+          data: { key: encrypt(newUser.id.toString()) },
         });
       } else {
         res.status(200).json({ success: false, message: "email existed." });
@@ -195,11 +202,12 @@ router.put("/user", async (req: Request, res: Response) => {
   const key = req.get("key");
 
   if (key) {
-    const id = +decrypt(key);
+    const id = decrypt(key);
+    console.log("decrypt");
     console.log(id);
     const avatar = req.body["avatar"] as string;
     const points = +req.body["points"];
-    var userToUpdate = await db.getUserById(req, +id);
+    var userToUpdate = await db.getUserById(req, id);
     if (userToUpdate) {
       userToUpdate.avatar = avatar;
       userToUpdate.points = points;
@@ -226,7 +234,7 @@ router.delete("/user", async (req: Request, res: Response) => {
   const key = req.get("key");
 
   if (key) {
-    const id = +decrypt(key);
+    const id = decrypt(key);
     if (id) {
       const result = await db.deleteUser(req, id);
 
@@ -248,7 +256,7 @@ router.get("/user/favorite_tracks", async (req: Request, res: Response) => {
   const key = req.get("key");
 
   if (key) {
-    const id = +decrypt(key);
+    const id = decrypt(key); 
     res.status(200).json({ success: true, data: await db.getFavoriteTracks(req, id) });
     
   } else {
@@ -257,3 +265,4 @@ router.get("/user/favorite_tracks", async (req: Request, res: Response) => {
 });
 
 module.exports = router;
+ 

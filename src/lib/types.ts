@@ -12,7 +12,7 @@ export interface Journal {
 }
 
 export type User = {
-  id: number;
+  id: string;
   email: string|undefined;
   password: string|undefined;
   avatar: string|undefined;

@@ -16,77 +16,53 @@ router.get("/audio", async (req: Request, res: Response) => {
   if (key_id) {
     const id = decrypt(key_id);
 
-    const usr = await db.getUserById(req, +id);
-    isPremium = (usr && usr.expiredAt && usr.expiredAt > new Date());
+    const usr = await db.getUserById(req, id);
+    isPremium = usr && usr.expiredAt && usr.expiredAt > new Date();
   }
-  isPremium=isPremium??false
-console.log(isPremium)
-  var audios;
+  isPremium = isPremium ?? false;
 
-  if (tags) {
-    audios = await prisma.track.findMany({
-      where: {
+  var audios;
+  const offset = +pageSize * +page;
+
+  var where = tags
+    ? {
         tags: {
           hasEvery: tags.toString().split(","),
         },
+      }
+    : {};
+
+  audios = await prisma.track.findMany({
+    where: where,
+    orderBy: [
+      {
+        set: "asc",
       },
-      orderBy: [
-        {
-          set: "asc",
-        },
-        {
-          id: "asc",
-        },
-      ],
-      select: {
-        id: true,
-        is_premium: true,
-        title: true,
-        author: true,
-        pubDate: true,
-        image_url: true,
-        audio_url: isPremium??false,
-        audio_type: true,
-        audio_length: true,
-        tags: true,
-        subtitle: true,
-        description: true,
-        play_count: true,
-        favorite_count: true,
-        set: true,
-        type: true,
-      }
-    });
-  } else {
-    audios = await prisma.track.findMany({
-      orderBy: [
-        {
-          set: "asc",
-        },
-        {
-          id: "asc",
-        },
-      ],
-      select: {
-        id: true,
-        is_premium: true,
-        title: true,
-        author: true,
-        pubDate: true,
-        image_url: true,
-        audio_url: true,
-        audio_type: true,
-        audio_length: true,
-        tags: true,
-        subtitle: true,
-        description: true,
-        play_count: true,
-        favorite_count: true,
-        set: true,
-        type: true, 
-      }
-    }); 
-  }
+      {
+        id: "asc",
+      },
+    ],
+    skip:offset,
+    take: +pageSize,
+    select: {
+      id: true,
+      is_premium: true,
+      title: true,
+      author: true,
+      pubDate: true,
+      image_url: true,
+      audio_url: isPremium ?? false,
+      audio_type: true,
+      audio_length: true,
+      tags: true,
+      subtitle: true,
+      description: true,
+      play_count: true,
+      favorite_count: true,
+      set: true,
+      type: true,
+    },
+  });
 
   res.status(200).json({ success: true, data: audios });
 });
