@@ -51,7 +51,7 @@ router.get("/audio", async (req: Request, res: Response) => {
       author: true,
       pubDate: true,
       image_url: true,
-      audio_url: isPremium ?? false,
+      audio_url: true,
       audio_type: true,
       audio_length: true,
       tags: true,
