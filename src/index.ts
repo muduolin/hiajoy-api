@@ -5,12 +5,6 @@ import * as dotenv from "dotenv";
 const cors = require('cors');
 import { PrismaClient } from "@prisma/client";
 
-const middleware = require("./middleware");
-const journalRouter = require("./journal");
-const userRouter = require("./user");
-const bookRouter = require("./book");
-const audioRouter = require("./audio");
-const emailRouter = require("./email");
 const app = express();
 const port = process.env.PORT || 3000;
 dotenv.config();
@@ -30,12 +24,13 @@ app.locals.prisma = client;
 app.use(cors());
 app.use(express.json());
 
-app.use(middleware);
-app.use(journalRouter);
-app.use(bookRouter);
-app.use(userRouter);
-app.use(audioRouter);
-app.use(emailRouter);
+app.use(require("./middleware"));
+app.use(require("./journal"));
+app.use(require("./user"));
+app.use(require("./book"));
+app.use(require("./audio"));
+app.use(require("./email"));
+app.use(require("./favorite_track"));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

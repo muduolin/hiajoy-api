@@ -252,17 +252,5 @@ router.delete("/user", async (req: Request, res: Response) => {
     res.status(200).json({ success: false, message: "access key not valid." });
 });
 
-router.get("/user/favorite_tracks", async (req: Request, res: Response) => {
-  const key = req.get("key");
-
-  if (key) {
-    const id = decrypt(key); 
-    res.status(200).json({ success: true, data: await db.getFavoriteTracks(req, id) });
-    
-  } else {
-    res.status(200).json({ success: false, message: "access key not valid." });
-  }
-});
-
 module.exports = router;
  

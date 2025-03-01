@@ -3,29 +3,28 @@ import { User, Journal } from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
 
-
 export async function getUserByEmail(req: Request, email: string) {
   const user = await req.app.locals.prisma.user.findFirst({
-    where:{
-      email: email
+    where: {
+      email: email,
     },
-    include:{
-      profile: true
-    }
-  })
+    include: {
+      profile: true,
+    },
+  });
 
   return user;
 }
 
 export async function getUserById(req: Request, id: string) {
   const user = await req.app.locals.prisma.user.findFirst({
-    where:{
-      id: id
+    where: {
+      id: id,
     },
-    include:{
-      profile: true
-    }
-  })
+    include: {
+      profile: true,
+    },
+  });
 
   return user;
 }
@@ -93,10 +92,10 @@ export async function getJournal(
 
   const records = await req.app.locals.prisma.journal.findMany({
     where: {
-      userId: id
+      userId: id,
     },
     skip: offset,
-    take: pageSize
+    take: pageSize,
   });
   return records;
 }
@@ -108,12 +107,12 @@ export async function createJournal(
   content: string
 ) {
   const record = await req.app.locals.prisma.journal.create({
-    data:{
+    data: {
       userId: userId,
       title: title,
-      content: content
-    }
-  })
+      content: content,
+    },
+  });
 
   return record;
 }
@@ -216,18 +215,54 @@ export async function deleteEmail(req: Request, email: string) {
 
 export async function getFavoriteTracks(req: Request, id: string) {
   try {
-    const entity = await req.app.locals.prisma.user.findFirst({
+    const entity = await req.app.locals.prisma.user_track.findMany({
       where: {
-        id: id,
+        userId: id,
       },
       include: {
-        profile: {
-          favorite_tracks: { include: { track: true } },
-        },
+        track: true,
       },
     });
-    return entity.favorite_tracks;
-  } catch {
+    console.log(entity);
+    return entity;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+export async function createFavoriteTrack(
+  req: Request,
+  userId: string,
+  track_id: number
+) {
+  try {
+    const record = await req.app.locals.prisma.user_track.create({
+      data: {
+        userId: userId,
+        trackId: track_id,
+      },
+    });
+
+    return record;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function deleteFavoriteTrack(
+  req: Request,
+  userId: string,
+  track_id: number
+) {
+  try {
+    const record = await req.app.locals.prisma.user_track.delete({
+      where: { userId_trackId: { userId: userId, trackId: track_id } },
+    });
+
+    return record;
+  } catch (e) {
+    console.log(e);
     return null;
   }
 }
