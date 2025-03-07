@@ -265,6 +265,22 @@ async function main() {
   };
 
   await upsert(15, record);
+
+  record = {
+    title: "5 min stomach meditation",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/015.jpg",
+    audio_url: host + "/audios/10minute_stomach.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["short", "5 minutes", "meditation"],
+    subtitle: "Guided breathing meditation",
+    description: "",
+    set: null,
+    type: track_type.MEDITATION
+  };
+
+  await upsert(16, record);
 }
 
 main()

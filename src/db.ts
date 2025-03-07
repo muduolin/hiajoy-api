@@ -64,7 +64,25 @@ export async function updateUser(req: Request, user: User) {
           points: user.points,
         },
       },
+    }
+  });
+
+  return updated;
+}
+
+export async function pointsIncrement(req: Request, id: String, increment: Number) {
+  const updated = req.app.locals.prisma.user.update({
+    where: { id: id },
+    data: {
+      profile: {
+        update: {
+          points: {increment: increment},
+        },
+      },
     },
+    include:{
+      profile:true
+    }
   });
 
   return updated;

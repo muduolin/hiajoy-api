@@ -125,7 +125,7 @@ router.post("/register", async (req: Request, res: Response) => {
   const code = req.body["code"];
 
   var emails = await db.searchEmail(req, email);
-  
+
   if (
     emails &&
     emails[0] &&
@@ -134,7 +134,7 @@ router.post("/register", async (req: Request, res: Response) => {
   ) {
     if (email && isValidEmail(email) && password) {
       var user = await db.getUserByEmail(req, email);
-      if(user){
+      if (user) {
         res.status(200).json({ success: false, message: "email existed." });
         return;
       }
@@ -153,7 +153,7 @@ router.post("/register", async (req: Request, res: Response) => {
         .status(200)
         .json({ success: false, message: "email or password not valid." });
     }
-  }else {
+  } else {
     res
       .status(200)
       .json({ success: false, message: "email or code not valid." });
@@ -175,7 +175,6 @@ router.post("/reset", async (req: Request, res: Response) => {
     if (email && isValidEmail(email) && password) {
       var user = await db.getUserByEmail(req, email);
       if (email && password && user) {
-
         user.password = Md5.hashStr(password);
         var result = await db.updateUser(req, user);
         res.status(200).json({
@@ -191,7 +190,7 @@ router.post("/reset", async (req: Request, res: Response) => {
         .status(200)
         .json({ success: false, message: "email or password not valid." });
     }
-  }else {
+  } else {
     res
       .status(200)
       .json({ success: false, message: "email or code not valid." });
@@ -252,5 +251,26 @@ router.delete("/user", async (req: Request, res: Response) => {
     res.status(200).json({ success: false, message: "access key not valid." });
 });
 
+router.put("/user/points", async (req: Request, res: Response) => {
+  const key = req.get("key");
+
+  if (key) {
+    const id = decrypt(key);
+    const points = +req.body["increment"];
+    var result = await db.pointsIncrement(req, id, points);
+    console.log(result)
+    if (result && result.profile) {
+      res.status(200).json({
+        success: true,
+        message: "user points updated",
+        data: {points: result.profile.points}
+      });
+    } else {
+      res.status(200).json({ success: false, message: "user points update failed." });
+    }
+  } else {
+    res.status(200).json({ success: false, message: "user not found." });
+  }
+});
+
 module.exports = router;
- 
