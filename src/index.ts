@@ -31,6 +31,7 @@ app.use(require("./book"));
 app.use(require("./audio"));
 app.use(require("./email"));
 app.use(require("./favorite_track"));
+app.use(require("./task"));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

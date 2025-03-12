@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { User, Journal } from "./lib/types";
+import { User, Journal , Task} from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
 
@@ -281,6 +281,79 @@ export async function deleteFavoriteTrack(
     return record;
   } catch (e) {
     console.log(e);
+    return null;
+  }
+}
+
+export async function getTask(
+  req: Request,
+  id: string,
+  page: number = 0,
+  pageSize: number = 10
+) {
+  const offset = +pageSize * +page;
+
+  const records = await req.app.locals.prisma.task.findMany({
+    where: {
+      userId: id,
+    },
+    skip: offset,
+    take: pageSize,
+  });
+  return records;
+}
+
+export async function createTask(
+  req: Request,
+  userId: string,
+  name: string,
+  description: string
+) {
+  const record = await req.app.locals.prisma.task.create({
+    data: {
+      userId: userId,
+      name: name,
+      description: description
+    },
+  });
+
+  return record;
+}
+
+export async function updateTask(
+  req: Request,
+  userId: string,
+  task: Task
+) {
+  try {
+    const journals = await req.app.locals.prisma.task.update({
+      where: {
+        userId: userId,
+        id: task.id,
+      },
+      data: {
+        name: task.name,
+        description: task.description,
+        isComplete: task.isComplete,
+        updatedAt: new Date()
+      },
+    });
+    return journals;
+  } catch {
+    return null;
+  }
+}
+
+export async function deleteTask(req: Request, userId: string, id: number) {
+  try {
+    const entity = await req.app.locals.prisma.task.delete({
+      where: {
+        userId: userId,
+        id: id,
+      },
+    });
+    return entity;
+  } catch {
     return null;
   }
 }

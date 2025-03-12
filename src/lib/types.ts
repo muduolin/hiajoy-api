@@ -23,3 +23,12 @@ export type User = {
   lastActiveAt: Date|undefined;
   points: number;
 }
+
+export type Task = {
+  id          : number;
+  name        : String;
+  description : String;
+  isComplete  : Boolean;
+  createdAt?   : Date| undefined;
+  completedAt? : Date| undefined;
+}

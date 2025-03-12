@@ -281,6 +281,54 @@ async function main() {
   };
 
   await upsert(16, record);
+
+  record = {
+    title: "I got this!",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/018.jpg",
+    audio_url: host + "/audios/daily01.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["affirmation", "1 minute", "daily"],
+    subtitle: "1 minute affirmation",
+    description: "Today, I choose to embrace calm and peace within myself. I acknowledge that anxiety is a part of my journey, but it does not define me. I am stronger than my fears, and I have the power to navigate through any challenge that comes my way. I breathe deeply, grounding myself in the present moment. Each breath I take fills me with strength and clarity, and each exhale releases tension and worry. I am in control of my thoughts, and I choose to focus on what I can control. I am safe, I am capable, and I am enough. Today, I will take things one step at a time, celebrating small victories along the way. I trust myself to handle whatever comes my way, and I am deserving of peace and joy. I am resilient, I am brave, and I am worthy of a calm and happy mind. Let today be a reminder of my strength and my ability to rise above anxiety. I've got this.",
+    set: "1",
+    type: track_type.AFFIRMATION
+  };
+
+  await upsert(17, record);
+
+  record = {
+    title: "I do my best, and my best is enough.",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/014.jpg",
+    audio_url: host + "/audios/daily02.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["affirmation", "1 minute", "daily"],
+    subtitle: "1 minute affirmation",
+    description: "I do my best, and my best is enough. I am here, present in this moment, and I choose to embrace myself fully. I do my best in everything I undertake, and my best is always enough. I release the need for perfection and instead honor the effort, love, and intention I pour into my actions. Each day, I grow, I learn, and I improve, but even now, I am worthy just as I am. My best is unique to me, and it is more than enough to create a meaningful and fulfilling life. I trust myself, I trust my journey, and I trust that my best is a gift to the world. I am enough, and I am at peace with who I am.",
+    set: "2",
+    type: track_type.AFFIRMATION
+  };
+
+  await upsert(18, record);
+
+  record = {
+    title: "I release fear and embrace the present moment with serenity.",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/042.jpg",
+    audio_url: host + "/audios/daily03.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["affirmation", "1 minute", "daily","default"],
+    subtitle: "1 minute affirmation",
+    description: "I release fear and embrace the present moment with serenity. Right now, I let go of all worries, doubts, and anxieties that no longer serve me. I am safe, grounded, and fully present in this moment. With each breath, I invite calmness and peace into my mind, body, and spirit. I trust the flow of life and know that I am exactly where I need to be. The present moment is a gift, and I choose to experience it with openness, gratitude, and serenity. I am free from fear, and I welcome the beauty and stillness of now. I am at peace. I am here. I am enough.",
+    set: "2",
+    type: track_type.AFFIRMATION
+  };
+
+  await upsert(19, record);
 }
 
 main()

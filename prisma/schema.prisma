@@ -69,12 +69,14 @@ model journal {
 }
 
 model task {
-  id          String       @id
+  id          Int       @id  @default(autoincrement())
+  name        String
   description String
   time        String       @default("1")
-  isDone      Boolean      @default(false)
+  isComplete  Boolean      @default(false)
   userId      String
   createdAt   DateTime     @default(now())
+  updatedAt   DateTime?    
   user        user_profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -102,4 +104,5 @@ model track {
   set            String?
   type           track_type?
   favorite_users user_track[]
+  related        Int[]
 }
