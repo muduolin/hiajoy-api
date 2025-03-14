@@ -36,11 +36,9 @@ router.get("/audio", async (req: Request, res: Response) => {
     where: where,
     orderBy: [
       {
-        set: "asc",
-      },
-      {
         id: "asc",
       },
+
     ],
     skip:offset,
     take: +pageSize,
