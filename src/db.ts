@@ -260,6 +260,9 @@ export async function createFavoriteTrack(
         userId: userId,
         trackId: track_id,
       },
+      include:{
+        track: true
+      }
     });
 
     return record;
