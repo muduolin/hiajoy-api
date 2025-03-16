@@ -50,7 +50,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "1",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 3}, {id: 4}]
+    }
   };
 
   await upsert(2, record);

@@ -104,5 +104,6 @@ model track {
   set            String?
   type           track_type?
   favorite_users user_track[]
-  related        Int[]
+  relatedBy track[]  @relation("TrackRelated")
+  relatedTo track[]  @relation("TrackRelated")
 }

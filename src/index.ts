@@ -28,7 +28,7 @@ app.use(require("./middleware"));
 app.use(require("./journal"));
 app.use(require("./user"));
 app.use(require("./book"));
-app.use(require("./audio"));
+app.use(require("./track"));
 app.use(require("./email"));
 app.use(require("./favorite_track"));
 app.use(require("./task"));

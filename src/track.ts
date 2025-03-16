@@ -6,7 +6,7 @@ import * as db from "./db";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/audio", async (req: Request, res: Response) => {
+router.get("/track", async (req: Request, res: Response) => {
   const page = req.query.page ?? 0;
   const pageSize = req.query.pageSize ?? 10;
   const tags = req.query.tags;
@@ -59,6 +59,7 @@ router.get("/audio", async (req: Request, res: Response) => {
       favorite_count: true,
       set: true,
       type: true,
+      relatedTo: true
     },
   });
 
