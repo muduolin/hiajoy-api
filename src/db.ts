@@ -4,29 +4,36 @@ import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
 
 export async function getUserByEmail(req: Request, email: string) {
-  const user = await req.app.locals.prisma.user.findFirst({
-    where: {
-      email: email,
-    },
-    include: {
-      profile: true,
-    },
-  });
-
-  return user;
+  try {
+    const user = await req.app.locals.prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+      include: {
+        profile: true,
+      },
+    });
+    return user;
+  } catch {
+    return null;
+  }
 }
 
 export async function getUserById(req: Request, id: string) {
-  const user = await req.app.locals.prisma.user.findFirst({
-    where: {
-      id: id,
-    },
-    include: {
-      profile: true,
-    },
-  });
+  try {
+    const user = await req.app.locals.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+      include: {
+        profile: true,
+      },
+    });
 
-  return user;
+    return user;
+  } catch {
+    return null;
+  }
 }
 
 export async function createUser(
@@ -35,39 +42,47 @@ export async function createUser(
   password: string,
   provider: string = ""
 ) {
-  const created = await req.app.locals.prisma.user.upsert({
-    where: { email: email },
-    update: {},
-    create: {
-      email: email,
-      password: password,
-      provider: provider,
-      profile: {
-        create: {},
+  try {
+    const created = await req.app.locals.prisma.user.upsert({
+      where: { email: email },
+      update: {},
+      create: {
+        email: email,
+        password: password,
+        provider: provider,
+        profile: {
+          create: {},
+        },
       },
-    },
-  });
-  return created;
+    });
+    return created;
+  } catch {
+    return null;
+  }
 }
 
 export async function updateUser(req: Request, user: User) {
-  const updated = req.app.locals.prisma.user.update({
-    where: { id: user.id },
-    data: {
-      avatar: user.avatar,
-      password: user.password,
-      provider: user.provider,
-      username: user.username,
-      expiredAt: user.expiredAt,
-      profile: {
-        update: {
-          points: user.points,
+  try {
+    const updated = req.app.locals.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        avatar: user.avatar,
+        password: user.password,
+        provider: user.provider,
+        username: user.username,
+        expiredAt: user.expiredAt,
+        profile: {
+          update: {
+            points: user.points,
+          },
         },
       },
-    },
-  });
+    });
 
-  return updated;
+    return updated;
+  } catch {
+    return null;
+  }
 }
 
 export async function pointsIncrement(
@@ -75,21 +90,25 @@ export async function pointsIncrement(
   id: String,
   increment: Number
 ) {
-  const updated = req.app.locals.prisma.user.update({
-    where: { id: id },
-    data: {
-      profile: {
-        update: {
-          points: { increment: increment },
+  try {
+    const updated = req.app.locals.prisma.user.update({
+      where: { id: id },
+      data: {
+        profile: {
+          update: {
+            points: { increment: increment },
+          },
         },
       },
-    },
-    include: {
-      profile: true,
-    },
-  });
+      include: {
+        profile: true,
+      },
+    });
 
-  return updated;
+    return updated;
+  } catch {
+    return null;
+  }
 }
 
 export async function deleteUser(req: Request, id: string) {
@@ -110,16 +129,20 @@ export async function getJournal(
   page: number = 0,
   pageSize: number = 10
 ) {
-  const offset = +pageSize * +page;
+  try {
+    const offset = +pageSize * +page;
 
-  const records = await req.app.locals.prisma.journal.findMany({
-    where: {
-      userId: id,
-    },
-    skip: offset,
-    take: pageSize,
-  });
-  return records;
+    const records = await req.app.locals.prisma.journal.findMany({
+      where: {
+        userId: id,
+      },
+      skip: offset,
+      take: pageSize,
+    });
+    return records;
+  } catch {
+    return null;
+  }
 }
 
 export async function createJournal(
@@ -302,16 +325,20 @@ export async function getTask(
   page: number = 0,
   pageSize: number = 10
 ) {
-  const offset = +pageSize * +page;
+  try {
+    const offset = +pageSize * +page;
 
-  const records = await req.app.locals.prisma.task.findMany({
-    where: {
-      userId: id,
-    },
-    skip: offset,
-    take: pageSize,
-  });
-  return records;
+    const records = await req.app.locals.prisma.task.findMany({
+      where: {
+        userId: id,
+      },
+      skip: offset,
+      take: pageSize,
+    });
+    return records;
+  } catch {
+    return null;
+  }
 }
 
 export async function createTask(
@@ -320,15 +347,19 @@ export async function createTask(
   name: string,
   description: string
 ) {
-  const record = await req.app.locals.prisma.task.create({
-    data: {
-      userId: userId,
-      name: name,
-      description: description,
-    },
-  });
+  try {
+    const record = await req.app.locals.prisma.task.create({
+      data: {
+        userId: userId,
+        name: name,
+        description: description,
+      },
+    });
 
-  return record;
+    return record;
+  } catch {
+    return null;
+  }
 }
 
 export async function updateTask(req: Request, userId: string, task: Task) {

@@ -52,7 +52,7 @@ async function main() {
     set: "1",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 3}, {id: 4}]
+      connect: [ { id: 3}, {id: 4}, { id: 5}, {id: 6},{ id: 7}]
     }
   };
 
@@ -70,7 +70,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "2",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 2}, {id: 4}, { id: 5}, {id: 6},{ id: 7}]
+    }
   };
 
   await upsert(3, record);
@@ -87,7 +90,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "3",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 2}, {id: 3}, { id: 5}, {id: 6},{ id: 7}]
+    }
   };
 
   await upsert(4, record);
@@ -104,7 +110,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "4",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 6},{ id: 7}]
+    }
   };
   await upsert(5, record);
 
@@ -120,7 +129,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "5",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 5},{ id: 7}]
+    }
   };
   await upsert(6, record);
 
@@ -136,7 +148,10 @@ async function main() {
     description:
       "Powertools teaches you the essential skills to handle difficult situations",
     set: "6",
-    type: track_type.COURSE
+    type: track_type.COURSE,
+    relatedTo: {
+      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 5},{ id: 6}]
+    }
   };
   await upsert(7, record);
 

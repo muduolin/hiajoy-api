@@ -38,9 +38,8 @@ router.get("/track", async (req: Request, res: Response) => {
       {
         id: "asc",
       },
-
     ],
-    skip:offset,
+    skip: offset,
     take: +pageSize,
     select: {
       id: true,
@@ -59,11 +58,38 @@ router.get("/track", async (req: Request, res: Response) => {
       favorite_count: true,
       set: true,
       type: true,
-      relatedTo: true
+      relatedTo: true,
     },
   });
 
   res.status(200).json({ success: true, data: audios });
+});
+
+router.get("/related_track", async (req: Request, res: Response) => {
+  const track_id = req.query.trackId;
+  const key_id = req.get("key");
+
+  if (track_id) {
+    var audio = await prisma.track.findFirst({
+      where: {
+        id: +track_id,
+      },
+      select: {
+        id: true,
+        relatedTo: true,
+      },
+    });
+
+    if(audio && audio.relatedTo)
+    {
+      res.status(200).json({ success: true, data: audio?.relatedTo });
+    }else{
+      res.status(200).json({ success: true, data: null });
+    }
+    
+  } else {
+    res.status(200).json({ success: false, data: null });
+  }
 });
 
 const container_name = "audios";
