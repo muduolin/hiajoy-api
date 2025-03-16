@@ -32,6 +32,8 @@ router.post("/journal", async (req: Request, res: Response) => {
     var inserted = await db.createJournal(req, id, title, content);
     if(inserted){
       res.status(200).json({success: true, data: inserted});
+    }else{
+      res.status(200).json({success: false, message: "journal not created"});
     }
     
   }else{

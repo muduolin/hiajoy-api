@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { User, Journal , Task} from "./lib/types";
+import { User, Journal, Task } from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
 
@@ -64,25 +64,29 @@ export async function updateUser(req: Request, user: User) {
           points: user.points,
         },
       },
-    }
+    },
   });
 
   return updated;
 }
 
-export async function pointsIncrement(req: Request, id: String, increment: Number) {
+export async function pointsIncrement(
+  req: Request,
+  id: String,
+  increment: Number
+) {
   const updated = req.app.locals.prisma.user.update({
     where: { id: id },
     data: {
       profile: {
         update: {
-          points: {increment: increment},
+          points: { increment: increment },
         },
       },
     },
-    include:{
-      profile:true
-    }
+    include: {
+      profile: true,
+    },
   });
 
   return updated;
@@ -124,15 +128,19 @@ export async function createJournal(
   title: string,
   content: string
 ) {
-  const record = await req.app.locals.prisma.journal.create({
-    data: {
-      userId: userId,
-      title: title,
-      content: content,
-    },
-  });
+  try {
+    const record = await req.app.locals.prisma.journal.create({
+      data: {
+        userId: userId,
+        title: title,
+        content: content,
+      },
+    });
 
-  return record;
+    return record;
+  } catch {
+    return null;
+  }
 }
 
 export async function updateJournal(
@@ -260,9 +268,9 @@ export async function createFavoriteTrack(
         userId: userId,
         trackId: track_id,
       },
-      include:{
-        track: true
-      }
+      include: {
+        track: true,
+      },
     });
 
     return record;
@@ -316,18 +324,14 @@ export async function createTask(
     data: {
       userId: userId,
       name: name,
-      description: description
+      description: description,
     },
   });
 
   return record;
 }
 
-export async function updateTask(
-  req: Request,
-  userId: string,
-  task: Task
-) {
+export async function updateTask(req: Request, userId: string, task: Task) {
   try {
     const journals = await req.app.locals.prisma.task.update({
       where: {
@@ -338,7 +342,7 @@ export async function updateTask(
         name: task.name,
         description: task.description,
         isComplete: task.isComplete,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
     });
     return journals;
