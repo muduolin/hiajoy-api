@@ -138,6 +138,9 @@ export async function getJournal(
       },
       skip: offset,
       take: pageSize,
+      orderBy:{
+        createdAt: "desc"
+      }
     });
     return records;
   } catch {

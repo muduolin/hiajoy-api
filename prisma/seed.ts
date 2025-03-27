@@ -30,10 +30,13 @@ async function main() {
     audio_type: "mp3",
     audio_length: 0,
     tags: ["sleep", "10 minutes", "meditation"],
-    subtitle: "Guided sleep meditation",
+    subtitle: "A peaceful sleep is within reach. Follow this guided sleep meditation to slow down and lead the mind into a deep sleep.",
     description: "",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
+    relatedTo: {
+      connect: [ { id: 20}]
+    }
   };
   await upsert(1, record);
 
@@ -347,6 +350,24 @@ async function main() {
   };
 
   await upsert(19, record);
+
+  record = {
+    title: "Calming sleep 2",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/041.jpg",
+    audio_url: host + "/audios/sleep02.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["sleep", "20 minutes", "meditation"],
+    subtitle: "Guided sleep meditation",
+    description: "",
+    set: null,
+    type: track_type.MEDITATION,
+    relatedTo: {
+      connect: [ { id: 1}]
+    }
+  };
+  await upsert(20, record);
 }
 
 main()
