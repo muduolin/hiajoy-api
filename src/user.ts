@@ -289,11 +289,11 @@ router.put("/user/affirmation", async (req: Request, res: Response) => {
     if (result && result.profile) {
       res.status(200).json({
         success: true,
-        message: "user points updated",
-        data: {points: result.profile.points}
+        message: "user affirmation updated",
+        data: {affirmTrackId: result.profile.affirmTrackId}
       });
     } else {
-      res.status(200).json({ success: false, message: "user points update failed." });
+      res.status(200).json({ success: false, message: "user affirmation update failed." });
     }
   } else {
     res.status(200).json({ success: false, message: "user not found." });
