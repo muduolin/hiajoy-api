@@ -56,6 +56,7 @@ router.post("/login", async (req: Request, res: Response) => {
             createdAt: user.createdAt,
             lastActiveAt: user.lastActiveAt,
             points: user.profile.points,
+            affirmTrackId: user.profile.affirmTrackId,
             key: encrypt(user.id.toString()),
           },
         });
@@ -75,6 +76,7 @@ router.post("/login", async (req: Request, res: Response) => {
           createdAt: user.createdAt,
           lastActiveAt: user.lastActiveAt,
           points: user.profile.points,
+          affirmTrackId: user.profile.affirmTrackId,
           key: encrypt(user.id.toString()),
         },
       });
@@ -99,6 +101,7 @@ router.post("/login", async (req: Request, res: Response) => {
             createdAt: userResult.createdAt,
             lastActiveAt: userResult.lastActiveAt,
             points: user.profile.points,
+            affirmTrackId: user.profile.affirmTrackId,
             key: encrypt(userResult.id.toString()),
           },
         });
@@ -260,6 +263,28 @@ router.put("/user/points", async (req: Request, res: Response) => {
     const id = decrypt(key);
     const points = +req.body["increment"];
     var result = await db.pointsIncrement(req, id, points);
+    console.log(result)
+    if (result && result.profile) {
+      res.status(200).json({
+        success: true,
+        message: "user points updated",
+        data: {points: result.profile.points}
+      });
+    } else {
+      res.status(200).json({ success: false, message: "user points update failed." });
+    }
+  } else {
+    res.status(200).json({ success: false, message: "user not found." });
+  }
+});
+
+router.put("/user/affirmation", async (req: Request, res: Response) => {
+  const key = req.get("key");
+
+  if (key) {
+    const id = decrypt(key);
+    const track_id = +req.body["track_id"];
+    var result = await db.updateAffirmationTrackId(req, id, track_id);
     console.log(result)
     if (result && result.profile) {
       res.status(200).json({

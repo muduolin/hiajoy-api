@@ -113,6 +113,32 @@ export async function pointsIncrement(
   }
 }
 
+export async function updateAffirmationTrackId(
+  req: Request,
+  id: String,
+  track_id: Number
+) {
+  try {
+    const updated = req.app.locals.prisma.user.update({
+      where: { id: id },
+      data: {
+        profile: {
+          update: {
+            affirmTrackId: track_id,
+          },
+        },
+      },
+      include: {
+        profile: true,
+      },
+    });
+
+    return updated;
+  } catch {
+    return null;
+  }
+}
+
 export async function deleteUser(req: Request, id: string) {
   try {
     const deleted = await req.app.locals.prisma.user.delete({
