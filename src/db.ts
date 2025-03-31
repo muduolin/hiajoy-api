@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { User, Journal, Task } from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
+import Sentiment from 'sentiment';
 
 export async function getUserByEmail(req: Request, email: string) {
   try {
@@ -74,6 +75,7 @@ export async function updateUser(req: Request, user: User) {
         profile: {
           update: {
             points: user.points,
+            track_id: user.affirmTrackId??null
           },
         },
       },
@@ -155,11 +157,16 @@ export async function createJournal(
   content: string
 ) {
   try {
+    const sentiment = new Sentiment();
+    const senti = sentiment.analyze(title + " " + content);
+    console.log(senti)
+
     const record = await req.app.locals.prisma.journal.create({
       data: {
         userId: userId,
         title: title,
         content: content,
+        mood: senti.score
       },
     });
 
@@ -175,6 +182,9 @@ export async function updateJournal(
   journal: Journal
 ) {
   try {
+    const sentiment = new Sentiment();
+    const senti = sentiment.analyze(journal.title + " " + journal.content);
+    console.log(journal.id)
     const journals = await req.app.locals.prisma.journal.update({
       where: {
         userId: id,
@@ -183,10 +193,12 @@ export async function updateJournal(
       data: {
         title: journal.title,
         content: journal.content,
+        mood: senti.score
       },
     });
     return journals;
-  } catch {
+  } catch(err) {
+    console.log(err)
     return null;
   }
 }

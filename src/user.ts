@@ -206,10 +206,12 @@ router.put("/user", async (req: Request, res: Response) => {
     console.log(id);
     const avatar = req.body["avatar"] as string;
     const points = +req.body["points"];
+    const trackId = req.body["track_id"] as string;
     var userToUpdate = await db.getUserById(req, id);
     if (userToUpdate) {
       userToUpdate.avatar = avatar;
       userToUpdate.points = points;
+      userToUpdate.affirmTrackId = trackId;
       var result = await db.updateUser(req, userToUpdate);
       if (result) {
         res.status(200).json({

@@ -22,6 +22,7 @@ export type User = {
   createdAt: Date|undefined;
   lastActiveAt: Date|undefined;
   points: number;
+  affirmTrackId: number;
 }
 
 export type Task = {

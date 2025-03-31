@@ -1,17 +1,17 @@
-//npx prisma db seed  
+//npx prisma db seed
 //npx prisma migrate dev
 import { PrismaClient, track_type } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function upsert(id: number, record: any){
-   await prisma.track.upsert({
+async function upsert(id: number, record: any) {
+  await prisma.track.upsert({
     where: { id: id },
     update: {
       ...record,
     },
     create: {
       id: id,
-      ...record, 
+      ...record,
       play_count: 0,
       favorite_count: 0,
     },
@@ -30,13 +30,14 @@ async function main() {
     audio_type: "mp3",
     audio_length: 0,
     tags: ["sleep", "10 minutes", "meditation"],
-    subtitle: "A peaceful sleep is within reach. Follow this guided sleep meditation to slow down and lead the mind into a deep sleep.",
+    subtitle:
+      "A peaceful sleep is within reach. Follow this guided sleep meditation to slow down and lead the mind into a deep sleep.",
     description: "",
     set: null,
     type: track_type.MEDITATION,
     relatedTo: {
-      connect: [ { id: 20}]
-    }
+      connect: [{ id: 20 }],
+    },
   };
   await upsert(1, record);
 
@@ -55,8 +56,8 @@ async function main() {
     set: "1",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 3}, {id: 4}, { id: 5}, {id: 6},{ id: 7}]
-    }
+      connect: [{ id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }],
+    },
   };
 
   await upsert(2, record);
@@ -75,8 +76,8 @@ async function main() {
     set: "2",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 2}, {id: 4}, { id: 5}, {id: 6},{ id: 7}]
-    }
+      connect: [{ id: 2 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }],
+    },
   };
 
   await upsert(3, record);
@@ -95,8 +96,8 @@ async function main() {
     set: "3",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 2}, {id: 3}, { id: 5}, {id: 6},{ id: 7}]
-    }
+      connect: [{ id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }, { id: 7 }],
+    },
   };
 
   await upsert(4, record);
@@ -115,8 +116,8 @@ async function main() {
     set: "4",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 6},{ id: 7}]
-    }
+      connect: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }, { id: 7 }],
+    },
   };
   await upsert(5, record);
 
@@ -134,8 +135,8 @@ async function main() {
     set: "5",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 5},{ id: 7}]
-    }
+      connect: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 7 }],
+    },
   };
   await upsert(6, record);
 
@@ -153,11 +154,10 @@ async function main() {
     set: "6",
     type: track_type.COURSE,
     relatedTo: {
-      connect: [ { id: 2}, {id: 3}, { id: 4}, {id: 5},{ id: 6}]
-    }
+      connect: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }],
+    },
   };
   await upsert(7, record);
-
 
   record = {
     title: "Sleep under a bonfire",
@@ -171,7 +171,7 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(8, record);
 
@@ -187,7 +187,7 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(9, record);
 
@@ -203,7 +203,7 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(10, record);
 
@@ -219,7 +219,7 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(11, record);
 
@@ -235,7 +235,7 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(12, record);
 
@@ -251,10 +251,9 @@ async function main() {
     description:
       "The white noise will help you stop the intrusive thoughts and get you into a good night sleep",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(13, record);
-
 
   record = {
     title: "5 min breathing",
@@ -267,7 +266,7 @@ async function main() {
     subtitle: "Guided breathing meditation",
     description: "",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
   await upsert(14, record);
 
@@ -282,7 +281,7 @@ async function main() {
     subtitle: "Guided breathing meditation",
     description: "",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
 
   await upsert(15, record);
@@ -298,7 +297,7 @@ async function main() {
     subtitle: "Guided breathing meditation",
     description: "",
     set: null,
-    type: track_type.MEDITATION
+    type: track_type.MEDITATION,
   };
 
   await upsert(16, record);
@@ -312,9 +311,10 @@ async function main() {
     audio_length: 0,
     tags: ["affirmation", "1 minute", "daily"],
     subtitle: "1 minute affirmation",
-    description: "Today, I choose to embrace calm and peace within myself. I acknowledge that anxiety is a part of my journey, but it does not define me. I am stronger than my fears, and I have the power to navigate through any challenge that comes my way. I breathe deeply, grounding myself in the present moment. Each breath I take fills me with strength and clarity, and each exhale releases tension and worry. I am in control of my thoughts, and I choose to focus on what I can control. I am safe, I am capable, and I am enough. Today, I will take things one step at a time, celebrating small victories along the way. I trust myself to handle whatever comes my way, and I am deserving of peace and joy. I am resilient, I am brave, and I am worthy of a calm and happy mind. Let today be a reminder of my strength and my ability to rise above anxiety. I've got this.",
+    description:
+      "Today, I choose to embrace calm and peace within myself. I acknowledge that anxiety is a part of my journey, but it does not define me. I am stronger than my fears, and I have the power to navigate through any challenge that comes my way. I breathe deeply, grounding myself in the present moment. Each breath I take fills me with strength and clarity, and each exhale releases tension and worry. I am in control of my thoughts, and I choose to focus on what I can control. I am safe, I am capable, and I am enough. Today, I will take things one step at a time, celebrating small victories along the way. I trust myself to handle whatever comes my way, and I am deserving of peace and joy. I am resilient, I am brave, and I am worthy of a calm and happy mind. Let today be a reminder of my strength and my ability to rise above anxiety. I've got this.",
     set: "1",
-    type: track_type.AFFIRMATION
+    type: track_type.AFFIRMATION,
   };
 
   await upsert(17, record);
@@ -328,9 +328,10 @@ async function main() {
     audio_length: 0,
     tags: ["affirmation", "1 minute", "daily"],
     subtitle: "1 minute affirmation",
-    description: "I do my best, and my best is enough. I am here, present in this moment, and I choose to embrace myself fully. I do my best in everything I undertake, and my best is always enough. I release the need for perfection and instead honor the effort, love, and intention I pour into my actions. Each day, I grow, I learn, and I improve, but even now, I am worthy just as I am. My best is unique to me, and it is more than enough to create a meaningful and fulfilling life. I trust myself, I trust my journey, and I trust that my best is a gift to the world. I am enough, and I am at peace with who I am.",
+    description:
+      "I do my best, and my best is enough. I am here, present in this moment, and I choose to embrace myself fully. I do my best in everything I undertake, and my best is always enough. I release the need for perfection and instead honor the effort, love, and intention I pour into my actions. Each day, I grow, I learn, and I improve, but even now, I am worthy just as I am. My best is unique to me, and it is more than enough to create a meaningful and fulfilling life. I trust myself, I trust my journey, and I trust that my best is a gift to the world. I am enough, and I am at peace with who I am.",
     set: "2",
-    type: track_type.AFFIRMATION
+    type: track_type.AFFIRMATION,
   };
 
   await upsert(18, record);
@@ -342,11 +343,12 @@ async function main() {
     audio_url: host + "/audios/daily03.mp3",
     audio_type: "mp3",
     audio_length: 0,
-    tags: ["affirmation", "1 minute", "daily","default"],
+    tags: ["affirmation", "1 minute", "daily", "default"],
     subtitle: "1 minute affirmation",
-    description: "I release fear and embrace the present moment with serenity. Right now, I let go of all worries, doubts, and anxieties that no longer serve me. I am safe, grounded, and fully present in this moment. With each breath, I invite calmness and peace into my mind, body, and spirit. I trust the flow of life and know that I am exactly where I need to be. The present moment is a gift, and I choose to experience it with openness, gratitude, and serenity. I am free from fear, and I welcome the beauty and stillness of now. I am at peace. I am here. I am enough.",
+    description:
+      "I release fear and embrace the present moment with serenity. Right now, I let go of all worries, doubts, and anxieties that no longer serve me. I am safe, grounded, and fully present in this moment. With each breath, I invite calmness and peace into my mind, body, and spirit. I trust the flow of life and know that I am exactly where I need to be. The present moment is a gift, and I choose to experience it with openness, gratitude, and serenity. I am free from fear, and I welcome the beauty and stillness of now. I am at peace. I am here. I am enough.",
     set: "2",
-    type: track_type.AFFIRMATION
+    type: track_type.AFFIRMATION,
   };
 
   await upsert(19, record);
@@ -364,10 +366,42 @@ async function main() {
     set: null,
     type: track_type.MEDITATION,
     relatedTo: {
-      connect: [ { id: 1}]
-    }
+      connect: [{ id: 1 }],
+    },
   };
   await upsert(20, record);
+
+  record = {
+    title: "One day at a time, that is enough for me",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/043.jpg",
+    audio_url: host + "/audios/daily04.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["affirmation", "1 minute", "daily"],
+    subtitle: "1 minute affirmation",
+    description:
+      "Today, I choose peace over worry. I remind myself that I don't have to solve everything at once. I only need to focus on today. Each moment is manageable when I take it step by step. I release the need to control the future. Instead, I trust in my ability to handle whatever comes, one day at a time. My mind is calm, my heart is steady, and I give myself permission to move at my own pace. I am safe in this moment. I am enough as I am. Today, I choose progress over perfection, presence over panic. With each breath, I affirm: I take things one day at a time, and that is enough.",
+    set: "4",
+    type: track_type.AFFIRMATION,
+  };
+  await upsert(21, record);
+
+  record = {
+    title: "I am competent",
+    author: "Hiajoy Inc.",
+    image_url: host + "/images/main/037.jpg",
+    audio_url: host + "/audios/daily05.mp3",
+    audio_type: "mp3",
+    audio_length: 0,
+    tags: ["affirmation", "1 minute", "daily"],
+    subtitle: "1 minute affirmation",
+    description:
+      "I am competent. I trust in my abilities and my strength. Even when anxiety arises, I remember that I am capable and resilient. I have faced challenges before, and I have overcome them. I am learning, growing, and improving every day. My mind may doubt, but my heart knows—I am enough. I release the need for perfection. I embrace progress. Every step I take, no matter how small, proves my competence. I breathe in confidence, and I exhale fear. I am in control of my thoughts, and I choose to believe in myself. I am competent. I am capable. I am calm. And I handle whatever comes my way with grace and strength.",
+    set: "4",
+    type: track_type.AFFIRMATION,
+  };
+  await upsert(22, record);
 }
 
 main()

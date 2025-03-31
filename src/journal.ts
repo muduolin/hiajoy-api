@@ -4,6 +4,7 @@ import * as db from "./db";
 import { Journal } from "./lib/types";
 
 
+
 const router = express.Router();
 
 router.get("/journal", async (req: Request, res: Response) => {
@@ -46,7 +47,7 @@ router.put("/journal", async (req: Request, res: Response) => {
   const title = req.body["title"];
   const content = req.body["content"];
   const key_id = req.get("key");
-
+console.log("put")
   if (key_id)
   {
     const uid = decrypt(key_id); 

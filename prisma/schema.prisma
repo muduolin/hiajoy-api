@@ -33,6 +33,7 @@ model user_profile {
   task                      task[]
   journal                   journal[]
   favorite_tracks           user_track[]
+  affirmTrackId             Int? 
 }
 
 model user_track {
