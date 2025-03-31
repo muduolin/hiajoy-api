@@ -6,6 +6,39 @@ import * as db from "./db";
 const prisma = new PrismaClient();
 const router = express.Router();
 
+router.get("/track/:id", async (req: Request, res: Response) => {
+  const track_id = parseInt(req.params.id);
+  var audio = await prisma.track.findFirst({
+    where: { id: track_id},
+    orderBy: [
+      {
+        id: "asc",
+      },
+    ],
+    select: {
+      id: true,
+      is_premium: true,
+      title: true,
+      author: true,
+      pubDate: true,
+      image_url: true,
+      audio_url: true,
+      audio_type: true,
+      audio_length: true,
+      tags: true,
+      subtitle: true,
+      description: true,
+      play_count: true,
+      favorite_count: true,
+      set: true,
+      type: true,
+      relatedTo: false,
+    },
+  });
+
+  res.status(200).json({ success: true, data: audio });
+});
+
 router.get("/track", async (req: Request, res: Response) => {
   const page = req.query.page ?? 0;
   const pageSize = req.query.pageSize ?? 10;
