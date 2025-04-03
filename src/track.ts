@@ -111,20 +111,24 @@ router.get("/related_track", async (req: Request, res: Response) => {
   const key_id = req.get("key");
 
   if (track_id) {
-    var audio = await prisma.track.findFirst({
-      where: {
-        id: +track_id,
-      },
-      select: {
-        id: true,
-        relatedTo: true,
-      },
-    });
+    try {
+      var audio = await prisma.track.findFirst({
+        where: {
+          id: +track_id,
+        },
+        select: {
+          id: true,
+          relatedTo: true,
+        },
+      });
 
-    if (audio && audio.relatedTo) {
-      res.status(200).json({ success: true, data: audio?.relatedTo });
-    } else {
-      res.status(200).json({ success: true, data: null });
+      if (audio && audio.relatedTo) {
+        res.status(200).json({ success: true, data: audio?.relatedTo });
+      } else {
+        res.status(200).json({ success: true, data: null });
+      }
+    } catch (err) {
+      res.status(200).json({ success: false, data: null });
     }
   } else {
     res.status(200).json({ success: false, data: null });
