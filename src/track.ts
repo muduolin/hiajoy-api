@@ -8,35 +8,39 @@ const router = express.Router();
 
 router.get("/track/:id", async (req: Request, res: Response) => {
   const track_id = parseInt(req.params.id);
-  var audio = await prisma.track.findFirst({
-    where: { id: track_id},
-    orderBy: [
-      {
-        id: "asc",
+  if (track_id) {
+    var audio = await prisma.track.findFirst({
+      where: { id: track_id },
+      orderBy: [
+        {
+          id: "asc",
+        },
+      ],
+      select: {
+        id: true,
+        is_premium: true,
+        title: true,
+        author: true,
+        pubDate: true,
+        image_url: true,
+        audio_url: true,
+        audio_type: true,
+        audio_length: true,
+        tags: true,
+        subtitle: true,
+        description: true,
+        play_count: true,
+        favorite_count: true,
+        set: true,
+        type: true,
+        relatedTo: false,
       },
-    ],
-    select: {
-      id: true,
-      is_premium: true,
-      title: true,
-      author: true,
-      pubDate: true,
-      image_url: true,
-      audio_url: true,
-      audio_type: true,
-      audio_length: true,
-      tags: true,
-      subtitle: true,
-      description: true,
-      play_count: true,
-      favorite_count: true,
-      set: true,
-      type: true,
-      relatedTo: false,
-    },
-  });
+    });
 
-  res.status(200).json({ success: true, data: audio });
+    res.status(200).json({ success: true, data: audio });
+  }else{
+    res.status(200).json({ success: false });
+  }
 });
 
 router.get("/track", async (req: Request, res: Response) => {
@@ -113,13 +117,11 @@ router.get("/related_track", async (req: Request, res: Response) => {
       },
     });
 
-    if(audio && audio.relatedTo)
-    {
+    if (audio && audio.relatedTo) {
       res.status(200).json({ success: true, data: audio?.relatedTo });
-    }else{
+    } else {
       res.status(200).json({ success: true, data: null });
     }
-    
   } else {
     res.status(200).json({ success: false, data: null });
   }
