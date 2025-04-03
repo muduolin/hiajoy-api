@@ -9,36 +9,40 @@ const router = express.Router();
 router.get("/track/:id", async (req: Request, res: Response) => {
   const track_id = parseInt(req.params.id);
   if (track_id) {
-    var audio = await prisma.track.findFirst({
-      where: { id: track_id },
-      orderBy: [
-        {
-          id: "asc",
+    try {
+      var audio = await prisma.track.findFirst({
+        where: { id: track_id },
+        orderBy: [
+          {
+            id: "asc",
+          },
+        ],
+        select: {
+          id: true,
+          is_premium: true,
+          title: true,
+          author: true,
+          pubDate: true,
+          image_url: true,
+          audio_url: true,
+          audio_type: true,
+          audio_length: true,
+          tags: true,
+          subtitle: true,
+          description: true,
+          play_count: true,
+          favorite_count: true,
+          set: true,
+          type: true,
+          relatedTo: false,
         },
-      ],
-      select: {
-        id: true,
-        is_premium: true,
-        title: true,
-        author: true,
-        pubDate: true,
-        image_url: true,
-        audio_url: true,
-        audio_type: true,
-        audio_length: true,
-        tags: true,
-        subtitle: true,
-        description: true,
-        play_count: true,
-        favorite_count: true,
-        set: true,
-        type: true,
-        relatedTo: false,
-      },
-    });
+      });
 
-    res.status(200).json({ success: true, data: audio });
-  }else{
+      res.status(200).json({ success: true, data: audio });
+    } catch (err) {
+      res.status(200).json({ success: false });
+    }
+  } else {
     res.status(200).json({ success: false });
   }
 });
