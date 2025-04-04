@@ -12,7 +12,7 @@ router.get("/task", async (req: Request, res: Response) => {
 
   if (key_id) {
     const id = decrypt(key_id);
- console.log(id)
+
     const data = await db.getTask(req, id, +page, +pageSize);
     if (data) {
       res.status(200).json({ success: true, data: data });

@@ -39,9 +39,9 @@ router.post("/login", async (req: Request, res: Response) => {
 
     const decoded = jwtDecode<AppleUser>(token);
     userEmail = decoded.email;
-    //console.log(decoded)
+    
   }
-  //console.log(userEmail);
+
   if (userEmail) {
     var user = await db.getUserByEmail(req, userEmail);
 

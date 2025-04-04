@@ -2,13 +2,16 @@ import express, { Request, Response } from "express";
 import { User, Journal, Task } from "./lib/types";
 import { isValidEmail, trimEndChar } from "./lib/util";
 import { email, user } from "@prisma/client";
-import Sentiment from 'sentiment';
+import Sentiment from "sentiment";
 
 export async function getUserByEmail(req: Request, email: string) {
   try {
     const user = await req.app.locals.prisma.user.findFirst({
       where: {
-        email: email,
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
       },
       include: {
         profile: true,
@@ -45,10 +48,10 @@ export async function createUser(
 ) {
   try {
     const created = await req.app.locals.prisma.user.upsert({
-      where: { email: email },
+      where: { email: email.toLowerCase() },
       update: {},
       create: {
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         provider: provider,
         profile: {
@@ -75,7 +78,7 @@ export async function updateUser(req: Request, user: User) {
         profile: {
           update: {
             points: user.points,
-            affirmTrackId: user.affirmTrackId??null
+            affirmTrackId: user.affirmTrackId ?? null,
           },
         },
       },
@@ -166,9 +169,9 @@ export async function getJournal(
       },
       skip: offset,
       take: pageSize,
-      orderBy:{
-        createdAt: "desc"
-      }
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return records;
   } catch {
@@ -185,14 +188,14 @@ export async function createJournal(
   try {
     const sentiment = new Sentiment();
     const senti = sentiment.analyze(title + " " + content);
-    console.log(senti)
+    console.log(senti);
 
     const record = await req.app.locals.prisma.journal.create({
       data: {
         userId: userId,
         title: title,
         content: content,
-        mood: senti.score
+        mood: senti.score,
       },
     });
 
@@ -210,7 +213,7 @@ export async function updateJournal(
   try {
     const sentiment = new Sentiment();
     const senti = sentiment.analyze(journal.title + " " + journal.content);
-    console.log(journal.id)
+    console.log(journal.id);
     const journals = await req.app.locals.prisma.journal.update({
       where: {
         userId: id,
@@ -219,12 +222,12 @@ export async function updateJournal(
       data: {
         title: journal.title,
         content: journal.content,
-        mood: senti.score
+        mood: senti.score,
       },
     });
     return journals;
-  } catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     return null;
   }
 }
@@ -262,7 +265,12 @@ export async function createEmail(req: Request, email: string) {
   try {
     console.log("prisma upsert email: " + email);
     const entity = await req.app.locals.prisma.email.upsert({
-      where: { email: email},
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+      },
       create: { email: email },
       update: { email: email },
     });
@@ -277,7 +285,12 @@ export async function updateEmail(req: Request, email: email) {
     if (!isValidEmail(email.email!)) return null;
 
     const updated = await req.app.locals.prisma.email.update({
-      where: { email: email.email },
+      where: {
+        email: {
+          equals: email.email,
+          mode: "insensitive",
+        },
+      },
       data: {
         code: email.code,
         sendEmail: email.sendEmail,
@@ -295,7 +308,12 @@ export async function updateEmail(req: Request, email: email) {
 export async function deleteEmail(req: Request, email: string) {
   try {
     const entity = await req.app.locals.prisma.email.delete({
-      where: { email: email },
+      where: {
+        email: {
+          equals: email,
+          mode: "insensitive",
+        },
+      },
     });
 
     return entity;
