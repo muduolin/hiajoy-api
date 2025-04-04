@@ -250,7 +250,7 @@ export async function searchEmail(req: Request, email: string) {
   try {
     const emails = await req.app.locals.prisma.email.findMany({
       where: {
-        email: email,
+        email: email.toLowerCase(),
       },
     });
     return emails;
@@ -266,16 +266,15 @@ export async function createEmail(req: Request, email: string) {
     console.log("prisma upsert email: " + email);
     const entity = await req.app.locals.prisma.email.upsert({
       where: {
-        email: {
-          equals: email,
-          mode: "insensitive",
-        },
+        email: email
       },
       create: { email: email },
       update: { email: email },
     });
+    console.log(entity) 
     return entity;
   } catch (e) {
+    console.log(e)
     return null;
   }
 }
@@ -286,10 +285,7 @@ export async function updateEmail(req: Request, email: email) {
 
     const updated = await req.app.locals.prisma.email.update({
       where: {
-        email: {
-          equals: email.email,
-          mode: "insensitive",
-        },
+        email: email.email?.toLowerCase()
       },
       data: {
         code: email.code,
