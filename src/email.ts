@@ -25,7 +25,7 @@ router.post("/requestcode", async (req: Request, res: Response) => {
       sender.send(email, "Hiajoy: one time passcode");
       res.status(200).json({ success: true, message: "code sent to the email"});
     }
-  } else res.status(200).json({ success: false});
+  } else res.status(200).json({ success: false, message: "too frequent request"});
 });
 
 router.post("/subscribe", async (req: Request, res: Response) => {

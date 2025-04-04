@@ -75,7 +75,7 @@ export async function updateUser(req: Request, user: User) {
         profile: {
           update: {
             points: user.points,
-            track_id: user.affirmTrackId??null
+            affirmTrackId: user.affirmTrackId??null
           },
         },
       },
@@ -257,11 +257,12 @@ export async function searchEmail(req: Request, email: string) {
 }
 
 export async function createEmail(req: Request, email: string) {
+  email = email.toLowerCase();
   if (!isValidEmail(email)) return null;
   try {
     console.log("prisma upsert email: " + email);
     const entity = await req.app.locals.prisma.email.upsert({
-      where: { email: email },
+      where: { email: email},
       create: { email: email },
       update: { email: email },
     });

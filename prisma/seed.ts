@@ -305,7 +305,7 @@ async function main() {
   record = {
     title: "I got this!",
     author: "Hiajoy Inc.",
-    image_url: host + "/images/main/018.jpg",
+    image_url: host + "/images/main/056.jpg",
     audio_url: host + "/audios/daily01.mp3",
     audio_type: "mp3",
     audio_length: 0,
@@ -322,7 +322,7 @@ async function main() {
   record = {
     title: "I do my best, and my best is enough.",
     author: "Hiajoy Inc.",
-    image_url: host + "/images/main/014.jpg",
+    image_url: host + "/images/main/057.jpg",
     audio_url: host + "/audios/daily02.mp3",
     audio_type: "mp3",
     audio_length: 0,
@@ -339,7 +339,7 @@ async function main() {
   record = {
     title: "I release fear and embrace the present moment with serenity.",
     author: "Hiajoy Inc.",
-    image_url: host + "/images/main/042.jpg",
+    image_url: host + "/images/main/059.jpg",
     audio_url: host + "/audios/daily03.mp3",
     audio_type: "mp3",
     audio_length: 0,
@@ -374,7 +374,7 @@ async function main() {
   record = {
     title: "One day at a time, that is enough for me",
     author: "Hiajoy Inc.",
-    image_url: host + "/images/main/043.jpg",
+    image_url: host + "/images/main/060.jpg",
     audio_url: host + "/audios/daily04.mp3",
     audio_type: "mp3",
     audio_length: 0,
@@ -390,7 +390,7 @@ async function main() {
   record = {
     title: "I am competent",
     author: "Hiajoy Inc.",
-    image_url: host + "/images/main/037.jpg",
+    image_url: host + "/images/main/063.jpg",
     audio_url: host + "/audios/daily05.mp3",
     audio_type: "mp3",
     audio_length: 0,

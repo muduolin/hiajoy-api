@@ -169,6 +169,7 @@ router.post("/reset", async (req: Request, res: Response) => {
   const code = req.body["code"];
 
   var emails = await db.searchEmail(req, email);
+  console.log(emails)
   if (
     emails &&
     emails[0] &&
@@ -198,7 +199,7 @@ router.post("/reset", async (req: Request, res: Response) => {
       .status(200)
       .json({ success: false, message: "email or code not valid." });
   }
-});
+}); 
 
 router.put("/user", async (req: Request, res: Response) => {
   const key = req.get("key");
