@@ -4,6 +4,7 @@ import { Md5 } from "ts-md5";
 import { jwtDecode } from "jwt-decode";
 import * as db from "./db";
 import { encrypt, decrypt } from "./lib/security";
+import { user } from "@prisma/client";
 
 const router = express.Router();
 
@@ -208,14 +209,52 @@ router.put("/user", async (req: Request, res: Response) => {
     const id = decrypt(key);
     console.log("decrypt");
     console.log(id);
-    const avatar = req.body["avatar"] as string;
+
     const points = +req.body["points"];
-    const trackId = req.body["track_id"] as string;
+    const trackId = +req.body["track_id"];
+    const avatar = req.body["avatar"] as string;
+    const username = req.body["username"] as string;
+    const productId = req.body["productId"] as string;
+    const purchaseTime = req.body["purchaseTime"] as Date;
+    const purchaseToken = req.body["purchaseToken"] as string;
     var userToUpdate = await db.getUserById(req, id);
+    console.log(userToUpdate)
+    console.log(trackId)
     if (userToUpdate) {
-      userToUpdate.avatar = avatar;
-      userToUpdate.points = points;
-      userToUpdate.affirmTrackId = trackId;
+
+      userToUpdate.avatar = avatar; // undefined means "do nothing" so empty param can be passed on will not update the data
+      userToUpdate.username = username;
+      userToUpdate.productId = productId;
+      userToUpdate.purchaseTime = new Date(purchaseTime);
+      userToUpdate.purchaseToken = purchaseToken;
+/**
+ * {
+  "acknowledged": false,
+  "autoRenewing": true,
+  "orderId": "GPA.3304-2015-5247-97560",
+  "packageName": "com.mlin74.hiajoymobile",
+  "productId": "com.hiajoy.yearly",
+  "purchaseState": 0,
+  "purchaseTime": 1744317686350,
+  "purchaseToken": "indfdgbdibmdpdgbddpblhlh.AO-J1Oye24qv1Zpfjga0Bega73PD9s7qc4TfxclwZZTTxi4dsp4US73X3EUrV9fJLGWLRUmB-jpTf1dXc080pXpmfJFu1nSqRp0EyuuvCv1EzN7uEwDGGFc",
+  "quantity": 1
+}
+ * 
+ * 
+ */
+
+      if(productId && purchaseToken != userToUpdate.profile.mobilePurchaseToken){
+        var current: Date = userToUpdate.expiredAt?? new Date();
+        current = current < new Date()? new Date(): current;
+        console.log(current)
+        console.log(productId)
+        current.setDate(current.getDate() + (productId =="com.hiajoy.yearly"?366:31));
+        console.log((productId =="com.hiajoy.yearly"?366:31))
+        userToUpdate.expiredAt = current;
+      }
+
+      Number.isNaN(points)? userToUpdate.points = userToUpdate.profile.points: userToUpdate.points = points;
+      Number.isNaN(trackId)? userToUpdate.affirmTrackId = userToUpdate.profile.affirmTrackId: userToUpdate.affirmTrackId = trackId;
       var result = await db.updateUser(req, userToUpdate);
       if (result) {
         res.status(200).json({

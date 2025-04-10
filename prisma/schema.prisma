@@ -28,6 +28,10 @@ model user_profile {
   stripeSubscriptionId      String?
   stripeProductId           String?
   stripeSubscriptionRenewal DateTime?
+
+  mobileProductId           String?
+  mobilePurchaseTime        DateTime?
+  mobilePurchaseToken      String?
   datePaid                  DateTime?
   user                      user         @relation(fields: [id], references: [id], onDelete: Cascade)
   task                      task[]

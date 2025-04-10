@@ -35,7 +35,8 @@ export async function getUserById(req: Request, id: string) {
     });
 
     return user;
-  } catch {
+  } catch (err){
+    console.log(err)
     return null;
   }
 }
@@ -79,6 +80,9 @@ export async function updateUser(req: Request, user: User) {
           update: {
             points: user.points,
             affirmTrackId: user.affirmTrackId ?? null,
+            mobileProductId: user.productId,
+            mobilePurchaseTime: user.purchaseTime,
+            mobilePurchaseToken: user.purchaseToken
           },
         },
       },

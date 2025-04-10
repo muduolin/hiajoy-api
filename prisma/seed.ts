@@ -98,6 +98,7 @@ async function main() {
     relatedTo: {
       connect: [{ id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }, { id: 7 }],
     },
+    is_premium: true
   };
 
   await upsert(4, record);
