@@ -260,6 +260,7 @@ router.put("/user", async (req: Request, res: Response) => {
         res.status(200).json({
           success: true,
           message: "user updated",
+          data: result
         });
       } else {
         res
