@@ -31,7 +31,8 @@ router.post("/login", async (req: Request, res: Response) => {
     );
     googleUser = (await result.json()) as GoogleUser;
     userEmail = googleUser.email;
-    //console.log(googleUser)
+    console.log("getting google email")
+    console.log(googleUser)
   } else if (provider == "apple" && token) {
     // after apple auth, pass the token to decode
     type AppleUser = {
@@ -40,12 +41,13 @@ router.post("/login", async (req: Request, res: Response) => {
 
     const decoded = jwtDecode<AppleUser>(token);
     userEmail = decoded.email;
-    
+    console.log("getting apple email")
   }
 
   if (userEmail) {
     var user = await db.getUserByEmail(req, userEmail);
 
+    console.log("getting user from db")
     if (user && email && password) {
       // login with email and password
       if (user.password == Md5.hashStr(password)) {
@@ -82,17 +84,19 @@ router.post("/login", async (req: Request, res: Response) => {
         },
       });
     } else if (!user && token) {
+      console.log("create new user")
       await db.createUser(req, userEmail, "clear-useless", provider);
       var userResult = await db.getUserByEmail(req, userEmail);
 
       if (userResult && googleUser && provider == "google") {
         userResult.avatar = googleUser.picture;
         userResult.username = googleUser.name;
-
+        console.log("update new user")
         await db.updateUser(req, userResult);
       }
 
       userResult = await db.getUserByEmail(req, userEmail);
+      console.log("get new user again")
       if (userResult) {
         res.status(200).json({
           success: true,
