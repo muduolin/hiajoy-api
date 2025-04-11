@@ -30,7 +30,7 @@ export async function getUserById(req: Request, id: string) {
         id: id,
       },
       include: {
-        profile: true,
+        profile: true, 
       },
     });
 

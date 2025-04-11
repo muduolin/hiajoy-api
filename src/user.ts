@@ -26,10 +26,14 @@ router.post("/login", async (req: Request, res: Response) => {
       picture: string;
       name: string;
     };
+    console.log(token)
     var result = await fetch(
-      "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token
+      "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token , {
+        method: 'GET',
+        mode: 'no-cors' 
+      }
     );
-    googleUser = (await result.json()) as GoogleUser;
+    googleUser = (await result.json()) as GoogleUser; 
     userEmail = googleUser.email;
     console.log("getting google email")
     console.log(googleUser)
@@ -96,7 +100,8 @@ router.post("/login", async (req: Request, res: Response) => {
       }
 
       userResult = await db.getUserByEmail(req, userEmail);
-      console.log("get new user again")
+      console.log("get new user again") 
+      console.log(userResult)
       if (userResult) {
         res.status(200).json({
           success: true,
@@ -105,9 +110,9 @@ router.post("/login", async (req: Request, res: Response) => {
             isPremium: false,
             createdAt: userResult.createdAt,
             lastActiveAt: userResult.lastActiveAt,
-            points: user.profile.points,
-            affirmTrackId: user.profile.affirmTrackId,
-            key: encrypt(userResult.id.toString()),
+            points: userResult.profile?.points,
+            affirmTrackId: userResult.profile.affirmTrackId,
+            key: encrypt(userResult.id.toString()), 
           },
         });
       } else {
