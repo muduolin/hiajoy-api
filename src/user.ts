@@ -26,17 +26,18 @@ router.post("/login", async (req: Request, res: Response) => {
       picture: string;
       name: string;
     };
-    console.log(token)
+    console.log(token);
     var result = await fetch(
-      "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token , {
-        method: 'GET',
-        mode: 'no-cors' 
+      "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token,
+      {
+        method: "GET",
+        mode: "no-cors",
       }
     );
-    googleUser = (await result.json()) as GoogleUser; 
+    googleUser = (await result.json()) as GoogleUser;
     userEmail = googleUser.email;
-    console.log("getting google email")
-    console.log(googleUser)
+    console.log("getting google email");
+    console.log(googleUser);
   } else if (provider == "apple" && token) {
     // after apple auth, pass the token to decode
     type AppleUser = {
@@ -45,13 +46,13 @@ router.post("/login", async (req: Request, res: Response) => {
 
     const decoded = jwtDecode<AppleUser>(token);
     userEmail = decoded.email;
-    console.log("getting apple email")
+    console.log("getting apple email");
   }
 
   if (userEmail) {
     var user = await db.getUserByEmail(req, userEmail);
 
-    console.log("getting user from db")
+    console.log("getting user from db");
     if (user && email && password) {
       // login with email and password
       if (user.password == Md5.hashStr(password)) {
@@ -90,20 +91,20 @@ router.post("/login", async (req: Request, res: Response) => {
         },
       });
     } else if (!user && token) {
-      console.log("create new user")
+      console.log("create new user");
       await db.createUser(req, userEmail, "clear-useless", provider);
       var userResult = await db.getUserByEmail(req, userEmail);
 
       if (userResult && googleUser && provider == "google") {
         userResult.avatar = googleUser.picture;
         userResult.username = googleUser.name;
-        console.log("update new user")
+        console.log("update new user");
         await db.updateUser(req, userResult);
       }
 
       userResult = await db.getUserByEmail(req, userEmail);
-      console.log("get new user again") 
-      console.log(userResult)
+      console.log("get new user again");
+      console.log(userResult);
       if (userResult) {
         res.status(200).json({
           success: true,
@@ -115,7 +116,7 @@ router.post("/login", async (req: Request, res: Response) => {
             lastActiveAt: userResult.lastActiveAt,
             points: userResult.profile?.points,
             affirmTrackId: userResult.profile.affirmTrackId,
-            key: encrypt(userResult.id.toString()), 
+            key: encrypt(userResult.id.toString()),
           },
         });
       } else {
@@ -182,7 +183,7 @@ router.post("/reset", async (req: Request, res: Response) => {
   const code = req.body["code"];
 
   var emails = await db.searchEmail(req, email);
-  console.log(emails)
+  console.log(emails);
   if (
     emails &&
     emails[0] &&
@@ -212,7 +213,7 @@ router.post("/reset", async (req: Request, res: Response) => {
       .status(200)
       .json({ success: false, message: "email or code not valid." });
   }
-}); 
+});
 
 router.put("/user", async (req: Request, res: Response) => {
   const key = req.get("key");
@@ -230,16 +231,15 @@ router.put("/user", async (req: Request, res: Response) => {
     const purchaseTime = req.body["purchaseTime"] as Date;
     const purchaseToken = req.body["purchaseToken"] as string;
     var userToUpdate = await db.getUserById(req, id);
-    console.log(userToUpdate)
-    console.log(trackId)
+    console.log(userToUpdate);
+    console.log(trackId);
     if (userToUpdate) {
-
       userToUpdate.avatar = avatar; // undefined means "do nothing" so empty param can be passed on will not update the data
       userToUpdate.username = username;
       userToUpdate.productId = productId;
       userToUpdate.purchaseTime = new Date(purchaseTime);
       userToUpdate.purchaseToken = purchaseToken;
-/**
+      /**
  * {
   "acknowledged": false,
   "autoRenewing": true,
@@ -255,35 +255,48 @@ router.put("/user", async (req: Request, res: Response) => {
  * 
  */
 
-      if(productId && purchaseToken != userToUpdate.profile.mobilePurchaseToken){
-        var current: Date = userToUpdate.expiredAt?? new Date();
-        current = current < new Date()? new Date(): current;
-        console.log(current)
-        console.log(productId)
-        current.setDate(current.getDate() + (productId =="com.hiajoy.yearly"?366:31));
-        console.log((productId =="com.hiajoy.yearly"?366:31))
+      if (
+        productId &&
+        purchaseToken != userToUpdate.profile.mobilePurchaseToken
+      ) {
+        var current: Date = userToUpdate.expiredAt ?? new Date();
+        current = current < new Date() ? new Date() : current;
+        console.log(current);
+        console.log(productId);
+        current.setDate(
+          current.getDate() + (productId == "com.hiajoy.yearly" ? 366 : 31)
+        );
+        console.log(productId == "com.hiajoy.yearly" ? 366 : 31);
         userToUpdate.expiredAt = current;
       }
 
-      Number.isNaN(points)? userToUpdate.points = userToUpdate.profile.points: userToUpdate.points = points;
-      Number.isNaN(trackId)? userToUpdate.affirmTrackId = userToUpdate.profile.affirmTrackId: userToUpdate.affirmTrackId = trackId;
+      Number.isNaN(points)
+        ? (userToUpdate.points = userToUpdate.profile.points)
+        : (userToUpdate.points = points);
+      Number.isNaN(trackId)
+        ? (userToUpdate.affirmTrackId = userToUpdate.profile.affirmTrackId)
+        : (userToUpdate.affirmTrackId = trackId);
       var result = await db.updateUser(req, userToUpdate);
       if (result) {
         res.status(200).json({
           success: true,
           message: "user updated",
-          data: result
+          data: result,
         });
+        return;
       } else {
         res
           .status(200)
           .json({ success: false, message: "user update failed." });
+        return;
       }
     } else {
       res.status(200).json({ success: false, message: "user not found." });
+      return;
     }
   } else {
     res.status(200).json({ success: false, message: "access key not valid." });
+    return;
   }
 });
 
@@ -316,15 +329,17 @@ router.put("/user/points", async (req: Request, res: Response) => {
     const id = decrypt(key);
     const points = +req.body["increment"];
     var result = await db.pointsIncrement(req, id, points);
-    console.log(result)
+    console.log(result);
     if (result && result.profile) {
       res.status(200).json({
         success: true,
         message: "user points updated",
-        data: {points: result.profile.points}
+        data: { points: result.profile.points },
       });
     } else {
-      res.status(200).json({ success: false, message: "user points update failed." });
+      res
+        .status(200)
+        .json({ success: false, message: "user points update failed." });
     }
   } else {
     res.status(200).json({ success: false, message: "user not found." });
@@ -338,15 +353,17 @@ router.put("/user/affirmation", async (req: Request, res: Response) => {
     const id = decrypt(key);
     const track_id = +req.body["track_id"];
     var result = await db.updateAffirmationTrackId(req, id, track_id);
-    console.log(result)
+    console.log(result);
     if (result && result.profile) {
       res.status(200).json({
         success: true,
         message: "user affirmation updated",
-        data: {affirmTrackId: result.profile.affirmTrackId}
+        data: { affirmTrackId: result.profile.affirmTrackId },
       });
     } else {
-      res.status(200).json({ success: false, message: "user affirmation update failed." });
+      res
+        .status(200)
+        .json({ success: false, message: "user affirmation update failed." });
     }
   } else {
     res.status(200).json({ success: false, message: "user not found." });
