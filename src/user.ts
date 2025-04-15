@@ -66,6 +66,8 @@ router.post("/login", async (req: Request, res: Response) => {
             expiredAt: user.expiredAt,
             points: user.profile.points,
             affirmTrackId: user.profile.affirmTrackId,
+            mobilePurchaseToken: user.profile.mobilePurchaseToken,
+            mobilePurchaseTime: user.profile.mobilePurchaseTime,
             key: encrypt(user.id.toString()),
           },
         });
@@ -87,6 +89,8 @@ router.post("/login", async (req: Request, res: Response) => {
           expiredAt: user.expiredAt,
           points: user.profile.points,
           affirmTrackId: user.profile.affirmTrackId,
+          mobilePurchaseToken: user.profile.mobilePurchaseToken,
+          mobilePurchaseTime: user.profile.mobilePurchaseTime,
           key: encrypt(user.id.toString()),
         },
       });
@@ -116,6 +120,8 @@ router.post("/login", async (req: Request, res: Response) => {
             lastActiveAt: userResult.lastActiveAt,
             points: userResult.profile?.points,
             affirmTrackId: userResult.profile.affirmTrackId,
+            mobilePurchaseToken: userResult.profile.mobilePurchaseToken,
+            mobilePurchaseTime: userResult.profile.mobilePurchaseTime,
             key: encrypt(userResult.id.toString()),
           },
         });
