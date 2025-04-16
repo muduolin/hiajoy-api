@@ -116,7 +116,7 @@ router.post("/login", async (req: Request, res: Response) => {
             isLogin: true,
             isPremium: false,
             createdAt: userResult.createdAt,
-            expiredAt: user.expiredAt,
+            expiredAt: userResult.expiredAt,
             lastActiveAt: userResult.lastActiveAt,
             points: userResult.profile?.points,
             affirmTrackId: userResult.profile.affirmTrackId,

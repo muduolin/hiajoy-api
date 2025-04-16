@@ -15,14 +15,14 @@ model user {
   provider     String?
   username     String?       @unique
   createdAt    DateTime      @default(now())
-  expiredAt    DateTime?
+  expiredAt    DateTime      @default(now())
   lastActiveAt DateTime      @default(now())
   isAdmin      Boolean       @default(false)
   profile      user_profile?
 }
 
 model user_profile {
-  id                        String          @id
+  id                        String       @id
   points                    Int          @default(0)
   stripeCustomerId          String?      @unique
   stripeSubscriptionId      String?
