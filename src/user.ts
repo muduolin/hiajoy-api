@@ -243,7 +243,7 @@ router.put("/user", async (req: Request, res: Response) => {
       userToUpdate.avatar = avatar; // undefined means "do nothing" so empty param can be passed on will not update the data
       userToUpdate.username = username;
       userToUpdate.productId = productId;
-      userToUpdate.purchaseTime = new Date(purchaseTime);
+      userToUpdate.purchaseTime = purchaseTime?new Date(purchaseTime): null;
       userToUpdate.purchaseToken = purchaseToken;
       /**
  * {
