@@ -236,15 +236,17 @@ router.put("/user", async (req: Request, res: Response) => {
     const productId = req.body["productId"] as string;
     const purchaseTime = req.body["purchaseTime"] as Date;
     const purchaseToken = req.body["purchaseToken"] as string;
+    const expiredAt = req.body["expiredAt"] as Date;
     var userToUpdate = await db.getUserById(req, id);
     console.log(userToUpdate);
-    console.log(trackId);
+    console.log(expiredAt);
     if (userToUpdate) {
       userToUpdate.avatar = avatar; // undefined means "do nothing" so empty param can be passed on will not update the data
       userToUpdate.username = username;
       userToUpdate.productId = productId;
       userToUpdate.purchaseTime = purchaseTime?new Date(purchaseTime): null;
       userToUpdate.purchaseToken = purchaseToken;
+      userToUpdate.expiredAt = expiredAt;
       /**
  * {
   "acknowledged": false,
