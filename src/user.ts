@@ -66,6 +66,7 @@ router.post("/login", async (req: Request, res: Response) => {
             expiredAt: user.expiredAt,
             points: user.profile.points,
             affirmTrackId: user.profile.affirmTrackId,
+            avatar: user.avatar,
             mobilePurchaseToken: user.profile.mobilePurchaseToken,
             mobilePurchaseTime: user.profile.mobilePurchaseTime,
             key: encrypt(user.id.toString()),
@@ -88,6 +89,7 @@ router.post("/login", async (req: Request, res: Response) => {
           lastActiveAt: user.lastActiveAt,
           expiredAt: user.expiredAt,
           points: user.profile.points,
+          avatar: user.avatar,
           affirmTrackId: user.profile.affirmTrackId,
           mobilePurchaseToken: user.profile.mobilePurchaseToken,
           mobilePurchaseTime: user.profile.mobilePurchaseTime,
@@ -117,6 +119,7 @@ router.post("/login", async (req: Request, res: Response) => {
             isPremium: false,
             createdAt: userResult.createdAt,
             expiredAt: userResult.expiredAt,
+            avatar: userResult.avatar,
             lastActiveAt: userResult.lastActiveAt,
             points: userResult.profile?.points,
             affirmTrackId: userResult.profile.affirmTrackId,
@@ -183,6 +186,37 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/user", async (req: Request, res: Response) => {
+  const key = req.get("key");
+
+  if (key) {
+    const id = decrypt(key);
+    
+    var user = await db.getUserById(req, id);
+
+    if (user) {
+      console.log(user)
+      res.status(200).json({
+        success: true,
+        data: {
+          isLogin: true,
+          isPremium: user.expiredAt && user.expiredAt > new Date(),
+          createdAt: user.createdAt,
+          lastActiveAt: user.lastActiveAt,
+          expiredAt: user.expiredAt,
+          points: user.profile.points,
+          avatar: user.avatar,
+          affirmTrackId: user.profile.affirmTrackId,
+          mobilePurchaseToken: user.profile.mobilePurchaseToken,
+          mobilePurchaseTime: user.profile.mobilePurchaseTime,
+          key: encrypt(user.id.toString()),
+        },
+      });
+    }
+  } else
+    res.status(200).json({ success: false, message: "access key not valid." });
+});
+
 router.post("/reset", async (req: Request, res: Response) => {
   const email = req.body["email"];
   const password = req.body["password"];
@@ -244,7 +278,7 @@ router.put("/user", async (req: Request, res: Response) => {
       userToUpdate.avatar = avatar; // undefined means "do nothing" so empty param can be passed on will not update the data
       userToUpdate.username = username;
       userToUpdate.productId = productId;
-      userToUpdate.purchaseTime = purchaseTime?new Date(purchaseTime): null;
+      userToUpdate.purchaseTime = purchaseTime ? new Date(purchaseTime) : null;
       userToUpdate.purchaseToken = purchaseToken;
       userToUpdate.expiredAt = expiredAt;
       /**

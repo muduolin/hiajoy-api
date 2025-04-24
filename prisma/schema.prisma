@@ -100,7 +100,7 @@ model track {
   image_url      String
   audio_url      String
   audio_type     String
-  audio_length   Int
+  audio_length   Int?         @default(0)
   tags           String[]
   subtitle       String
   description    String?
