@@ -206,6 +206,7 @@ router.get("/user", async (req: Request, res: Response) => {
           expiredAt: user.expiredAt,
           points: user.profile.points,
           avatar: user.avatar,
+          username: user.username,
           affirmTrackId: user.profile.affirmTrackId,
           mobilePurchaseToken: user.profile.mobilePurchaseToken,
           mobilePurchaseTime: user.profile.mobilePurchaseTime,
