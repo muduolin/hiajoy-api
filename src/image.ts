@@ -5,7 +5,7 @@ import multer from "multer";
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const { BlobServiceClient } = require("@azure/storage-blob");
+const { BlobServiceClient, BlobHttpHeaders, HttpHeaders, BlobUploadOptions } = require("@azure/storage-blob");
 
 router.post(
   "/image/avatar",
@@ -37,9 +37,12 @@ router.post(
             .resize({ width: 600 })
             .toBuffer();
           console.log(processedImageBuffer)
+
+          const blobOptions = { blobHTTPHeaders: { blobContentType: req.file?.mimetype } };
+ 
           await blockBlobClient.upload(
             processedImageBuffer,
-            processedImageBuffer.length
+            processedImageBuffer.length, blobOptions
           );
         } else await blockBlobClient.upload(req.file?.buffer, req.file?.size);
         res.status(200).send({
