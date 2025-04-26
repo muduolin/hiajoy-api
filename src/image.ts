@@ -12,6 +12,7 @@ router.post(
   upload.single("avatar"),
   async (req: Request, res: Response) => {
     try {
+      console.log(req.file?.mimetype)
       if (
         req.file?.mimetype == "image/png" ||
         req.file?.mimetype == "image/jpeg" ||
