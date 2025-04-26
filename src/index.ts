@@ -32,6 +32,7 @@ app.use(require("./track"));
 app.use(require("./email"));
 app.use(require("./favorite_track"));
 app.use(require("./task"));
+app.use(require("./image"));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
