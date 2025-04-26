@@ -25,12 +25,13 @@ router.get("/journal", async (req: Request, res: Response) => {
 router.post("/journal", async (req: Request, res: Response) => {
   const title = req.body["title"];
   const content = req.body["content"];
+  const image = req.body["image"];
   const key_id = req.get("key");
 
   if (key_id)
   {
     const id = decrypt(key_id); 
-    var inserted = await db.createJournal(req, id, title, content);
+    var inserted = await db.createJournal(req, id, title, content, image);
     if(inserted){
       res.status(200).json({success: true, data: inserted});
     }else{
@@ -46,12 +47,13 @@ router.put("/journal", async (req: Request, res: Response) => {
   const id = req.body["id"];
   const title = req.body["title"];
   const content = req.body["content"];
+  const image = req.body["image"];
   const key_id = req.get("key");
-console.log("put")
+
   if (key_id)
   {
     const uid = decrypt(key_id); 
-    var updated = await db.updateJournal(req, uid, {id: +id, title: title, content: content} as Journal);
+    var updated = await db.updateJournal(req, uid, {id: +id, title: title, content: content, image: image} as Journal);
     console.log(updated)
     if(updated){
       res.status(200).json({success: true, data: updated});

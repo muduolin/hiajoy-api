@@ -187,7 +187,8 @@ export async function createJournal(
   req: Request,
   userId: string,
   title: string,
-  content: string
+  content: string,
+  image: string
 ) {
   try {
     const sentiment = new Sentiment();
@@ -199,6 +200,7 @@ export async function createJournal(
         userId: userId,
         title: title,
         content: content,
+        image: image,
         mood: senti.score,
       },
     });
@@ -226,6 +228,7 @@ export async function updateJournal(
       data: {
         title: journal.title,
         content: journal.content,
+        image: journal.image,
         mood: senti.score,
       },
     });
