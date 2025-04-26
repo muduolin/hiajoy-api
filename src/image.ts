@@ -5,14 +5,19 @@ import multer from "multer";
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const { BlobServiceClient, BlobHttpHeaders, HttpHeaders, BlobUploadOptions } = require("@azure/storage-blob");
+const {
+  BlobServiceClient,
+  BlobHttpHeaders,
+  HttpHeaders,
+  BlobUploadOptions,
+} = require("@azure/storage-blob");
 
 router.post(
   "/image/avatar",
   upload.single("avatar"),
   async (req: Request, res: Response) => {
     try {
-      console.log(req.file?.mimetype)
+      console.log(req.file?.mimetype);
       if (
         req.file?.mimetype == "image/png" ||
         req.file?.mimetype == "image/jpeg" ||
@@ -30,19 +35,22 @@ router.post(
           uuid + "." + ext
         );
 
-        console.log(req.file?.size)
+        console.log(req.file?.size);
         const sharp = require("sharp");
         if (req.file?.size > 1000000) {
           const processedImageBuffer = await sharp(req.file?.buffer)
             .resize({ width: 600 })
             .toBuffer();
-          console.log(processedImageBuffer)
+          console.log(processedImageBuffer);
 
-          const blobOptions = { blobHTTPHeaders: { blobContentType: req.file?.mimetype } };
- 
+          const blobOptions = {
+            blobHTTPHeaders: { blobContentType: req.file?.mimetype },
+          };
+
           await blockBlobClient.upload(
             processedImageBuffer,
-            processedImageBuffer.length, blobOptions
+            processedImageBuffer.length,
+            blobOptions
           );
         } else await blockBlobClient.upload(req.file?.buffer, req.file?.size);
         res.status(200).send({
@@ -56,11 +64,33 @@ router.post(
       }
     } catch (error) {
       console.error(error);
-      res
-        .status(200)
-        .json({ success: false, message: "cannot create journal entry" });
+      res.status(200).json({ success: false, message: "cannot upload image" });
     }
   }
 );
+
+router.delete("/image/avatar", async (req: Request, res: Response) => {
+  try {
+    const image_name = req.body["image"];
+    const options = {
+      deleteSnapshots: "include",
+    };
+
+    console.log(req.body)
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerClient = blobServiceClient.getContainerClient(
+      process.env.AZURE_CONTAINER_NAME
+    );
+    const blockBlobClient = containerClient.getBlockBlobClient(image_name);
+
+    await blockBlobClient.delete(options); 
+    res.status(200).json({ success: true, message: "image deleted" });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({ success: false, message: "cannot delete image" });
+  }
+});
 
 module.exports = router;
