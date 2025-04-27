@@ -9,12 +9,12 @@ export class EmailSender {
     port: 465,
     secure: true,
     auth: {
-      user: "admin@tiaawo.com",
+      user: "admin@hiajoy.com",
       pass: "8mabw3DrNnXQ",
     },
   });
   private mailOptions = {
-    from: "Hiajoy <admin@tiaawo.com>",
+    from: "Hiajoy <admin@hiajoy.com>",
     to: "mlin74@gmail.com",
     subject: `Tiawo`,
     html: "",
